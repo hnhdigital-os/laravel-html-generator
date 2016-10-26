@@ -1,0 +1,27 @@
+{
+    "name": "bluora/laravel-html-generator",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rocco Howard",
+            "email": "rocco@bluora.com.au"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "Airmanbzh/php-html-generator": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*",        
+        "codeclimate/php-test-reporter": "dev-master",
+        "phpmd/phpmd" : "@stable"
+    },
+    "support": {
+        "issues": "https://github.com/bluora/laravel-html-generator/issues"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bluora\\LaravelHtmlGenerator\\": "src/"
+        }
+    }
+}
