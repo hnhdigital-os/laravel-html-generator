@@ -790,6 +790,19 @@ class Html extends Markup
     }
 
     /**
+     * Alias for setting an attribute
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @return Markup instance
+     */
+    public function setAttribute($name, $value)
+    {
+        return $this->set($name, $value);
+    }
+
+    /**
      * Set the tag name.
      *
      * @return string
