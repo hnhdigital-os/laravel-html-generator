@@ -93,6 +93,8 @@ class Html extends Markup
             }
             parent::attr($name, ...$value);
         }
+
+        return $this;
     }
 
     /**
