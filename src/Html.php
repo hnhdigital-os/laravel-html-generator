@@ -789,7 +789,7 @@ class Html extends Markup
      *
      * @return Markup instance
      */
-    public function set($name, $value)
+    public function set($name, $value = null)
     {
         if ($name === 'value') {
             $value = htmlspecialchars($value);
