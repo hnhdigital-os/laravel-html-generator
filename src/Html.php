@@ -57,6 +57,16 @@ class Html extends Markup
     }
 
     /**
+     * Add an action href.
+     *
+     * @return Html instance
+     */
+    public function actionHref($action, $parameters = [])
+    {
+        return $this->href(action($action, $parameters));
+    }
+
+    /**
      * Shortcut to set('alt', $value).
      *
      * @param string $value
