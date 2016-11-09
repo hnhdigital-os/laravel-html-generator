@@ -41,7 +41,7 @@ class Html extends Markup
      */
     public function action($text, $controller_action, $parameters = [])
     {
-        return $this->add('a')->text($text)
+        return $this->addElement('a')->text($text)
             ->href(action($controller_action, $parameters));
     }
 
@@ -487,7 +487,7 @@ class Html extends Markup
      */
     public function url($text, $url, $parameters = [], $secure = null)
     {
-        return $this->add('a')->text($text)
+        return $this->addElement('a')->text($text)
             ->href(url($url, $parameters, $secure));
     }
 
@@ -705,7 +705,7 @@ class Html extends Markup
      */
     public function route($text, $route, $parameters = [])
     {
-        return $this->add('a')->text($text)
+        return $this->addElement('a')->text($text)
             ->href(route($route, $parameters));
     }
 
