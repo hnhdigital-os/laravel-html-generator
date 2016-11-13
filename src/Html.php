@@ -703,10 +703,14 @@ class Html extends Markup
      *
      * @return Html instance
      */
-    public function route($text, $route, $parameters = [])
+    public function route($text, $route, $parameters = [], $arguments = [])
     {
+        $href = route($route, $parameters);
+        if (count($arguments)) {
+            $href .= '?'.http_build_query($arguments);
+        }
         return $this->addElement('a')->text($text)
-            ->href(route($route, $parameters));
+            ->href($href);
     }
 
     /**
@@ -714,9 +718,13 @@ class Html extends Markup
      *
      * @return Html instance
      */
-    public function routeHref($route, $parameters = [])
+    public function routeHref($route, $parameters = [], $arguments = [])
     {
-        return $this->href(route($route, $parameters));
+        $href = route($route, $parameters);
+        if (count($arguments)) {
+            $href .= '?'.http_build_query($arguments);
+        }
+        return $this->href($href);
     }
 
     /**
