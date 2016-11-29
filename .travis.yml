@@ -11,3 +11,6 @@ language: php
 matrix: 
   allow_failures: 
   - php: hhvm
+addons:
+  code_climate:
+      repo_token: c58e89633f5a1240ce74bb4319b25c5cb10f1c4de097fdceda8b93ce49bdd660
