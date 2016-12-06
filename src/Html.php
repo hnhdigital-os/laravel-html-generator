@@ -116,6 +116,13 @@ class Html extends Markup
         if (!isset($this->attributeList['class']) || is_null($this->attributeList['class'])) {
             $this->attributeList['class'] = [];
         }
+        if (!is_array($this->attributeList['class'])) {
+            if (!empty($this->attributeList['class'])) {
+                $this->attributeList['class'] = [$this->attributeList['class']];
+            } else {
+                $this->attributeList['class'] = [];
+            }
+        }
         foreach ($value as $class_name) {
             $class_name = trim($class_name);
             if (!empty($class_name)) {
