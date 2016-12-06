@@ -137,6 +137,20 @@ class Html extends Markup
     }
 
     /**
+     * Add a class based on a boolean value.
+     *
+     * @param bool   $check
+     * @param string $class_name_1
+     * @param string $class_name_0
+     *
+     * @return Html instance
+     */
+    public function addClassIf($check, $class_name_1 = '', $class_name_0 = '')
+    {
+        return $this->addClass($check ? $class_name_1 : $class_name_0);
+    }
+
+    /**
      * Shortcut to set('for', $value).
      *
      * @param string $value
