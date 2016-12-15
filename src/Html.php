@@ -326,6 +326,71 @@ class Html extends Markup
     }
 
     /**
+     * Create a form object.
+     */
+    public static function addForm($settings = [])
+    {
+        $form = Html::createElement('form');
+
+        if (array_get($settings, 'file_upload')) {
+            $form->addElement('input')->type('hidden')->name('MAX_FILE_SIZE')->value(self::getFileUploadMaxSize());
+        }
+
+        return $form;
+    }
+
+    /**
+     * Returns a file size limit in bytes based on the PHP upload_max_filesize
+     * and post_max_size.
+    *
+     * @return integer|string
+     */
+    public static function getFileUploadMaxSize($convert_to_bytes = true)
+    {
+        $max_size = -1;
+        $max_size_string = '0B';
+
+        if ($max_size < 0) {
+            // Start with post_max_size.
+            $max_size_string = ini_get('post_max_size');
+            $max_size = self::parseSize($max_size_string);
+
+            // If upload_max_size is less, then reduce. Except if upload_max_size is
+            // zero, which indicates no limit.
+            $upload_max = self::parseSize(ini_get('upload_max_filesize'));
+            if ($upload_max > 0 && $upload_max < $max_size) {
+                $max_size = $upload_max;
+                $max_size_string = ini_get('upload_max_filesize');
+            }
+        }
+
+        return $convert_to_bytes ? $max_size : $max_size_string;
+    }
+
+    /**
+     * Converts a text based size into bytes.
+     *
+     * @param  string $size
+     *
+     * @return int
+     */
+    private static function parseSize($size)
+    {
+        // Remove the non-unit characters from the size.
+        $unit = preg_replace('/[^bkmgtpezy]/i', '', $size); 
+
+        // Remove the non-numeric characters from the size.
+        $size = preg_replace('/[^0-9\.]/', '', $size);
+
+        // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
+        if ($unit) {
+            return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+        }
+
+        return round($size);
+    }
+
+    /**
      * Shortcut to set('download', $value).
      *
      * @return Html instance
