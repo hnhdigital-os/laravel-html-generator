@@ -578,6 +578,38 @@ class Html extends Markup
     }
 
     /**
+     * Shortcut to set('min', $value).
+     *
+     * @param int $value
+     *
+     * @return Html instance
+     */
+    public function min($value)
+    {
+        if ($this->tag === 'input') {
+            return parent::attr('min', $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Shortcut to set('max', $value).
+     *
+     * @param int $value
+     *
+     * @return Html instance
+     */
+    public function max($value)
+    {
+        if ($this->tag === 'input') {
+            return parent::attr('max', $value);
+        }
+
+        return $this;
+    }
+
+    /**
      * Shortcut to set('maxlength', $value).
      *
      * @param int $value
@@ -789,12 +821,10 @@ class Html extends Markup
      *
      * @return Html instance
      */
-    public function route($text, $route, $parameters = [], $arguments = [])
+    public function route($text, $route, $parameters = [], $target = '')
     {
         $href = route($route, $parameters);
-        if (count($arguments)) {
-            $href .= '?'.http_build_query($arguments);
-        }
+        $href .= !empty($target) ? '#'.$target : '';
         return $this->addElement('a')->text($text)
             ->href($href);
     }
@@ -804,12 +834,10 @@ class Html extends Markup
      *
      * @return Html instance
      */
-    public function routeHref($route, $parameters = [], $arguments = [])
+    public function routeHref($route, $parameters = [], $target = '')
     {
         $href = route($route, $parameters);
-        if (count($arguments)) {
-            $href .= '?'.http_build_query($arguments);
-        }
+        $href .= !empty($target) ? '#'.$target : '';
         return $this->href($href);
     }
 
