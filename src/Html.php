@@ -521,7 +521,7 @@ class Html extends Markup
     {
         $value = ($value !== 0) ? '\''.urlencode(htmlspecialchars($value)).'\'' : $value;
 
-        return $this->set('href', 'javascript:void();');
+        return $this->set('href', 'javascript:void('.$value.');');
     }
 
     /**
