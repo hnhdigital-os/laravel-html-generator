@@ -985,6 +985,18 @@ class Html extends Markup
     }
 
     /**
+     * Shortcut to set('tabindex', $value).
+     *
+     * @param string $value
+     *
+     * @return Html instance
+     */
+    public function tabindex($value)
+    {
+        return parent::attr('tabindex', $value);
+    }
+
+    /**
      * Shortcut to set('target', $value).
      *
      * @param string $value
