@@ -965,6 +965,20 @@ class Html extends Markup
     }
 
     /**
+     * Add a style based on a boolean value.
+     *
+     * @param bool   $check
+     * @param string $style_1
+     * @param string $style_0
+     *
+     * @return Html instance
+     */
+    public function addStyleIf($check, $style_1 = '', $style_0 = '')
+    {
+        return $this->style($check ? $style_1 : $style_0);
+    }
+
+    /**
      * Shortcut to set('style', $value).
      *
      * @param string $value
