@@ -171,6 +171,7 @@ class Html extends Markup
             $selected_value = [$selected_value];
         }
         foreach ($data as $key => $data_option) {
+            
             if ($data_value === false && $data_name === false) {
                 $value = 0;
                 $name = 1;
@@ -179,13 +180,26 @@ class Html extends Markup
                 $value = $data_value;
                 $name = $data_name;
             }
-            $option = $this->addElement('option')->value($data_option[$value])->text($data_option[$name]);
-            foreach (['style', 'class', 'id'] as $attr) {
+
+            $option_value = array_get($data_option, $value, '');
+            $option_name = array_get($data_option, $name, '');
+
+            if ($option_name === 'BREAK') {
+                $option_name = '--------------------';
+                if ($option_value !== '') {
+                    $option_name = '--- '.$option_value.' ---';
+                }
+                $option_value = '';
+                $data_option['disabled'] = 'disabled';
+            }
+
+            $option = $this->addElement('option')->value($option_value)->text($option_name);
+            foreach (['style', 'class', 'id', 'disabled'] as $attr) {
                 if (isset($data_option[$attr])) {
                     $option->attr($attr, $data_option[$attr]);
                 }
             }
-            if (!empty($selected_value) && in_array($data_option[$value], $selected_value)) {
+            if (!empty($selected_value) && in_array($option_value, $selected_value)) {
                 $option->selected('selected');
             }
         }
