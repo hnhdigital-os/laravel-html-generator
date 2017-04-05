@@ -171,6 +171,7 @@ class Html extends Markup
             $selected_value = [$selected_value];
         }
         foreach ($data as $key => $data_option) {
+            
             if ($data_value === false && $data_name === false) {
                 $value = 0;
                 $name = 1;
@@ -179,13 +180,26 @@ class Html extends Markup
                 $value = $data_value;
                 $name = $data_name;
             }
-            $option = $this->addElement('option')->value($data_option[$value])->text($data_option[$name]);
-            foreach (['style', 'class', 'id'] as $attr) {
+
+            $option_value = array_get($data_option, $value, '');
+            $option_name = array_get($data_option, $name, '');
+
+            if ($option_name === 'BREAK') {
+                $option_name = '--------------------';
+                if ($option_value !== '') {
+                    $option_name = '--- '.$option_value.' ---';
+                }
+                $option_value = '';
+                $data_option['disabled'] = 'disabled';
+            }
+
+            $option = $this->addElement('option')->value($option_value)->text($option_name);
+            foreach (['style', 'class', 'id', 'disabled'] as $attr) {
                 if (isset($data_option[$attr])) {
                     $option->attr($attr, $data_option[$attr]);
                 }
             }
-            if (!empty($selected_value) && in_array($data_option[$value], $selected_value)) {
+            if (!empty($selected_value) && in_array($option_value, $selected_value)) {
                 $option->selected('selected');
             }
         }
@@ -967,6 +981,20 @@ class Html extends Markup
     }
 
     /**
+     * Add a style based on a boolean value.
+     *
+     * @param bool   $check
+     * @param string $style_1
+     * @param string $style_0
+     *
+     * @return Html instance
+     */
+    public function addStyleIf($check, $style_1 = '', $style_0 = '')
+    {
+        return $this->style($check ? $style_1 : $style_0);
+    }
+
+    /**
      * Shortcut to set('style', $value).
      *
      * @param string $value
@@ -984,6 +1012,18 @@ class Html extends Markup
         $this->attributeList['style'] .= $value;
 
         return $this;
+    }
+
+    /**
+     * Shortcut to set('tabindex', $value).
+     *
+     * @param string $value
+     *
+     * @return Html instance
+     */
+    public function tabindex($value)
+    {
+        return parent::attr('tabindex', $value);
     }
 
     /**
