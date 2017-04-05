@@ -663,7 +663,9 @@ class Html extends Markup
      */
     public function on($name, $value)
     {
-        return parent::attr('on'.$name, $value);
+        parent::attr('on'.$name, $value);
+
+        return $this;
     }
 
     /**
