@@ -184,10 +184,10 @@ class Html extends Markup
             $option_value = array_get($data_option, $value, '');
             $option_name = array_get($data_option, $name, '');
 
-            if ($option_name === 'BREAK') {
-                $option_name = '--------------------';
-                if ($option_value !== '') {
-                    $option_name = '--- '.$option_value.' ---';
+            if ($option_value === 'BREAK') {
+                $option_value = '--------------------';
+                if ($option_name !== '') {
+                    $option_name = '--- '.$option_name.' ---';
                 }
                 $option_value = '';
                 $data_option['disabled'] = 'disabled';
@@ -734,11 +734,11 @@ class Html extends Markup
      */
     public static function prepareOptions($options, $blank_first_option = false, $value_first_option = '')
     {
-        $options = array_map(function ($value, $key) {
+        $options = array_map(function ($key, $value) {
             return [$key, $value];
         }, array_keys($options), array_values($options));
         if ($blank_first_option) {
-            array_unshift($options, [$value_first_option, '']);
+            array_unshift($options, ['', $value_first_option]);
         }
 
         return $options;
