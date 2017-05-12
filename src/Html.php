@@ -734,7 +734,7 @@ class Html extends Markup
      */
     public static function prepareOptions($options, $blank_first_option = false, $value_first_option = '')
     {
-        $options = array_map(function ($key, $value) {
+        $options = array_map(function ($value, $key) {
             return [$key, $value];
         }, array_keys($options), array_values($options));
         if ($blank_first_option) {
