@@ -167,7 +167,7 @@ class Html extends Markup
      */
     public function addOptionsArray($data, $data_value, $data_name, $selected_value = [])
     {
-        if (!empty($selected_value) && !is_array($selected_value)) {
+        if (!is_array($selected_value) && (strlen($selected_value) || !empty($selected_value))) {
             $selected_value = [$selected_value];
         }
         foreach ($data as $key => $data_option) {
