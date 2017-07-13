@@ -1,10 +1,10 @@
 {
-    "name": "bluora/laravel-html-generator",
+    "name": "hnhdigital-os/laravel-html-generator",
     "license": "MIT",
     "authors": [
         {
             "name": "Rocco Howard",
-            "email": "rocco@bluora.com.au"
+            "email": "rocco@hnh.digital"
         }
     ],
     "require": {
@@ -17,7 +17,7 @@
         "phpmd/phpmd" : "@stable"
     },
     "support": {
-        "issues": "https://github.com/bluora/laravel-html-generator/issues"
+        "issues": "https://github.com/hnhdigital-os/laravel-html-generator/issues"
     },
     "autoload": {
         "psr-4": {
