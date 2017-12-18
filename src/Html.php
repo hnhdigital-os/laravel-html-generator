@@ -182,7 +182,7 @@ class Html extends Markup
             }
 
             $option_value = array_get($data_option, $value, '');
-            $option_name = htmlspecialchars(array_get($data_option, $name, ''));
+            $option_name = array_get($data_option, $name, '');
 
             if ($option_value === 'BREAK') {
                 $option_value = '--------------------';
@@ -199,7 +199,6 @@ class Html extends Markup
                     $option->attr($attr, $data_option[$attr]);
                 }
             }
-
             if (!empty($selected_value) && in_array($option_value, $selected_value)) {
                 $option->selected('selected');
             }
@@ -424,9 +423,15 @@ class Html extends Markup
      */
     public static function icon($icon, $size = 0, $tag = 'i')
     {
+        if (substr($icon, 1, 1) == ' ') {
+            $type = substr($icon, 0, 1);
+            $icon = substr($icon, 2);
+        } else {
+            $type = 'l';
+        }
         $icon = ($icon[0] === '-') ? substr($icon, 1) : 'fa-'.$icon;
         $size = ($size > 0) ? ' fa-'.$size : '';
-        $fa = self::$tag()->addClass('fa '.$icon.$size)->aria('hidden', 'true');
+        $fa = self::$tag()->addClass('fa'.$type.' '.$icon.$size)->aria('hidden', 'true');
 
         return $fa;
     }
