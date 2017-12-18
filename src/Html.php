@@ -431,7 +431,7 @@ class Html extends Markup
         }
         $icon = ($icon[0] === '-') ? substr($icon, 1) : 'fa-'.$icon;
         $size = ($size > 0) ? ' fa-'.$size : '';
-        $fa = self::$tag()->addClass('fa'.$type.' '.$icon.$size)->aria('hidden', 'true');
+        $fa = self::$tag()->addClass('fa'.$type.' fa-fw '.$icon.$size)->aria('hidden', 'true');
 
         return $fa;
     }
