@@ -235,6 +235,20 @@ class Html extends Markup
     }
 
     /**
+     * Shortcut to set('readonly', $value). Only works with FORM, INPUT tags.
+     *
+     * @return Html instance
+     */
+    public function readonly($value = true)
+    {
+        if (in_array($this->tag, ['form', 'input', 'textarea'])) {
+            return parent::attr('readonly', $value ? 'readonly' : '');
+        }
+
+        return $this;
+    }
+
+    /**
      * Shortcut to set('autofocus', $value). Only works with BUTTON, INPUT, KEYGEN, SELECT, TEXTAREA tags.
      *
      * @return Html instance
@@ -423,6 +437,14 @@ class Html extends Markup
      */
     public static function icon($icon, $size = 0, $tag = 'i')
     {
+        $icon = preg_replace("/(\")(.*?)(\")/", "$2", $icon);
+
+        $icon_array = explode(',', $icon, 2);
+        $icon = array_get($icon_array, 0);
+        if (array_has($icon_array, 1)) {
+            $attributes = explode(',', array_get($icon_array, 1, ''));
+        }
+
         if (substr($icon, 1, 1) == ' ') {
             $type = substr($icon, 0, 1);
             $icon = substr($icon, 2);
@@ -431,7 +453,22 @@ class Html extends Markup
         }
         $icon = ($icon[0] === '-') ? substr($icon, 1) : 'fa-'.$icon;
         $size = ($size > 0) ? ' fa-'.$size : '';
+
         $fa = self::$tag()->addClass('fa'.$type.' fa-fw '.$icon.$size)->aria('hidden', 'true');
+
+        if (isset($attributes) && is_array($attributes)) {
+            foreach ($attributes as $attr) {
+                list($attr_name, $attr_value) = explode('=', $attr);
+                switch ($attr_name) {
+                    case 'transform':
+                        $fa->data('fa-'.$attr_name, $attr_value);
+                        break;                    
+                    default:
+                        $fa->attr($attr_name, $attr_value);
+                        break;
+                }                
+            }
+        }
 
         return $fa;
     }
@@ -654,6 +691,10 @@ class Html extends Markup
      */
     public function name($value)
     {
+        if ($value === false) {
+            return $this;
+        }
+
         return parent::attr('name', $value);
     }
 
