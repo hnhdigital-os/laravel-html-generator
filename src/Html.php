@@ -171,7 +171,6 @@ class Html extends Markup
             $selected_value = [$selected_value];
         }
         foreach ($data as $key => $data_option) {
-            
             if ($data_value === false && $data_name === false) {
                 $value = 0;
                 $name = 1;
@@ -358,7 +357,7 @@ class Html extends Markup
      */
     public static function addForm($settings = [])
     {
-        $form = Html::createElement('form');
+        $form = self::createElement('form');
 
         if (array_get($settings, 'file_upload')) {
             $form->addElement('input')->type('hidden')->name('MAX_FILE_SIZE')->value(self::getFileUploadMaxSize());
@@ -370,8 +369,8 @@ class Html extends Markup
     /**
      * Returns a file size limit in bytes based on the PHP upload_max_filesize
      * and post_max_size.
-    *
-     * @return integer|string
+     *
+     * @return int|string
      */
     public static function getFileUploadMaxSize($convert_to_bytes = true)
     {
@@ -398,14 +397,14 @@ class Html extends Markup
     /**
      * Converts a text based size into bytes.
      *
-     * @param  string $size
+     * @param string $size
      *
      * @return int
      */
     private static function parseSize($size)
     {
         // Remove the non-unit characters from the size.
-        $unit = preg_replace('/[^bkmgtpezy]/i', '', $size); 
+        $unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
 
         // Remove the non-numeric characters from the size.
         $size = preg_replace('/[^0-9\.]/', '', $size);
@@ -437,7 +436,7 @@ class Html extends Markup
      */
     public static function icon($icon, $size = 0, $tag = 'i')
     {
-        $icon = preg_replace("/(\")(.*?)(\")/", "$2", $icon);
+        $icon = preg_replace('/(")(.*?)(")/', '$2', $icon);
 
         $icon_array = explode(',', $icon, 2);
         $icon = array_get($icon_array, 0);
@@ -462,11 +461,11 @@ class Html extends Markup
                 switch ($attr_name) {
                     case 'transform':
                         $fa->data('fa-'.$attr_name, $attr_value);
-                        break;                    
+                        break;
                     default:
                         $fa->attr($attr_name, $attr_value);
                         break;
-                }                
+                }
             }
         }
 
@@ -888,6 +887,7 @@ class Html extends Markup
     {
         $href = route($route, $parameters);
         $href .= !empty($target) ? '#'.$target : '';
+
         return $this->addElement('a')->text($text)
             ->href($href);
     }
@@ -901,6 +901,7 @@ class Html extends Markup
     {
         $href = route($route, $parameters);
         $href .= !empty($target) ? '#'.$target : '';
+
         return $this->href($href);
     }
 
@@ -987,7 +988,7 @@ class Html extends Markup
     }
 
     /**
-     * Alias for setting an attribute
+     * Alias for setting an attribute.
      *
      * @param string $name
      * @param string $value
