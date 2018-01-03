@@ -452,7 +452,6 @@ class Html extends Markup
         }
         $icon = ($icon[0] === '-') ? substr($icon, 1) : 'fa-'.$icon;
         $size = ($size > 0) ? ' fa-'.$size : '';
-
         $fa = self::$tag()->addClass('fa'.$type.' fa-fw '.$icon.$size)->aria('hidden', 'true');
 
         if (isset($attributes) && is_array($attributes)) {
@@ -887,7 +886,6 @@ class Html extends Markup
     {
         $href = route($route, $parameters);
         $href .= !empty($target) ? '#'.$target : '';
-
         return $this->addElement('a')->text($text)
             ->href($href);
     }
@@ -901,7 +899,6 @@ class Html extends Markup
     {
         $href = route($route, $parameters);
         $href .= !empty($target) ? '#'.$target : '';
-
         return $this->href($href);
     }
 
@@ -1090,11 +1087,16 @@ class Html extends Markup
      * Define text content.
      *
      * @param string $value
+     * @param array $args
      *
      * @return Markup instance
      */
-    public function text($value)
+    public function text($value, ...$args)
     {
+        if (sizeof($args)) {
+            $value = sprintf($value, ...$args);
+        }
+
         if ($this->tag === 'textarea') {
             $value = htmlspecialchars($value);
         }
