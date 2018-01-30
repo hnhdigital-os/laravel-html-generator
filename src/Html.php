@@ -448,7 +448,7 @@ class Html extends Markup
             $type = substr($icon, 0, 1);
             $icon = substr($icon, 2);
         } else {
-            $type = 'l';
+            $type = config('html.icon.default.type', 'l');
         }
         $icon = ($icon[0] === '-') ? substr($icon, 1) : 'fa-'.$icon;
         $size = ($size > 0) ? ' fa-'.$size : '';
