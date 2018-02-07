@@ -307,6 +307,8 @@ class Html extends Markup
             }
         }
 
+        $tag_object->configDefaults($tag);
+
         return $tag_object;
     }
 
@@ -1166,6 +1168,18 @@ class Html extends Markup
      *
      * @return Html instance
      */
+    public function val($value = '')
+    {
+        return parent::attr('value', $value);
+    }
+
+    /**
+     * Shortcut to set('value', $value).
+     *
+     * @param string $value
+     *
+     * @return Html instance
+     */
     public function valueDate($value = '', $value_format = '', $setting_format = '')
     {
         if (is_object($value)) {
@@ -1178,6 +1192,20 @@ class Html extends Markup
         }
 
         return parent::attr('value', $value);
+    }
+
+    /**
+     * Apply any defaults from configuration.
+     *
+     * @return $this
+     */
+    public function configDefaults($tag)
+    {
+        if (count(config('html.default.'.$tag, []))) {
+            foreach (config('html.default.'.$tag) as $name => $value) {
+                $this->attr($name, $value);
+            }
+        }
     }
 
     /**
