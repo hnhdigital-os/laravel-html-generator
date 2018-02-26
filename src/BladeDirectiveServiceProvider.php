@@ -15,7 +15,13 @@ class BladeDirectiveServiceProvider extends ServiceProvider
     public function boot()
     {
         blade::directive('icon', function ($icon) {
-            return "<?= (string)Html::icon('$icon'); ?>";
+            $icon = trim($icon, "'\"");
+
+            if (substr($icon, 0, 1) !== '$') {
+                $icon = "'$icon'";
+            }
+
+            return "<?= (string)Html::icon($icon); ?>";
         });
 
         blade::directive('html', function ($html) {
