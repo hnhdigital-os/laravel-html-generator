@@ -226,7 +226,7 @@ class Html extends Markup
      */
     public function autocomplete($value = 'off')
     {
-        if (in_array($this->tag, ['form', 'input'])) {
+        if (in_array($this->tag, ['form', 'input', 'textarea', 'select'])) {
             return parent::attr('autocomplete', $value);
         }
 
@@ -240,7 +240,7 @@ class Html extends Markup
      */
     public function readonly($value = true)
     {
-        if (in_array($this->tag, ['form', 'input', 'textarea'])) {
+        if (in_array($this->tag, ['form', 'input', 'textarea', 'select'])) {
             return parent::attr('readonly', $value ? 'readonly' : '');
         }
 
@@ -336,7 +336,8 @@ class Html extends Markup
     public function disable($value = true, $check_value = true)
     {
         if ($value === $check_value) {
-            return parent::attr('disabled', 'disabled');
+            return parent::attr('disabled', 'disabled')
+                ->addClass('disabled');
         }
 
         return $this;
@@ -1108,6 +1109,20 @@ class Html extends Markup
     }
 
     /**
+     * Define text content if test is true.
+     *
+     * @param bool   $test
+     * @param string $value
+     * @param array  $args
+     *
+     * @return Markup instance
+     */
+    public function textIf($test, $value, ...$args)
+    {
+        return $test ? $this->text($value, ...$args) : $this;
+    }
+
+    /**
      * Shortcut to set('title', $value).
      *
      * @param string $value
@@ -1117,6 +1132,20 @@ class Html extends Markup
     public function title($value)
     {
         return parent::attr('title', $value);
+    }
+
+    /**
+     * Title toggle.
+     *
+     * @param bool $is_true
+     *
+     * @return $this
+     */
+    public function titleWhen($is_true)
+    {
+        return parent::attr('title',
+            $this->offsetGet('data-title-'.($is_true ? '1' : '0'))
+        );
     }
 
     /**
