@@ -780,13 +780,13 @@ class Html extends Markup
      *
      * @return Html instance
      */
-    public static function prepareOptions($options, $blank_first_option = false, $value_first_option = '')
+    public static function prepareOptions($options, $blank_first_option = false, $name_first_option = '', $value_first_option = '')
     {
         $options = array_map(function ($key, $value) {
             return [$key, $value];
         }, array_keys($options), array_values($options));
         if ($blank_first_option) {
-            array_unshift($options, ['', $value_first_option]);
+            array_unshift($options, [$value_first_option, $name_first_option]);
         }
 
         return $options;
