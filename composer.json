@@ -27,7 +27,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "HnhDigital\\LaravelHtmlGenerator\\BladeDirectiveServiceProvider"
+                "Bluora\\LaravelHtmlGenerator\\BladeDirectiveServiceProvider"
             ]
         }
     }
