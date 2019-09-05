@@ -8,13 +8,14 @@
         }
     ],
     "require": {
-        "php": "^7.1.3",
-        "Airmanbzh/php-html-generator": "dev-master"
+        "php": "^7.2",
+        "illuminate/support": "^5.8|^6.0",
+        "airmanbzh/php-html-generator": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.*",        
-        "codeclimate/php-test-reporter": "dev-master",
-        "phpmd/phpmd" : "@stable"
+        "phpunit/phpunit": "^8.3",
+        "phpmd/phpmd" : "~2.0",
+        "squizlabs/php_codesniffer" : "~3.0"
     },
     "support": {
         "issues": "https://github.com/hnhdigital-os/laravel-html-generator/issues"
@@ -30,5 +31,21 @@
                 "Bluora\\LaravelHtmlGenerator\\BladeDirectiveServiceProvider"
             ]
         }
-    }
+    },
+    "scripts": {
+        "test": [
+            "composer phpunit & composer phpcs & composer phpmd"
+        ],
+        "phpunit": [
+            "phpunit"
+        ],
+        "phpcs": [
+            "phpcs -p -s --standard=PSR2 ./src ./tests"
+        ],
+        "phpmd": [
+            "phpmd ./src text phpmd.xml"
+        ]
+    },
+    "prefer-stable": true,
+    "minimum-stability" : "dev"
 }

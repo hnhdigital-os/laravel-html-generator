@@ -3,6 +3,7 @@
 namespace Bluora\LaravelHtmlGenerator;
 
 use HtmlGenerator\Markup;
+use Illuminate\Support\Arr;
 
 class Html extends Markup
 {
@@ -180,8 +181,8 @@ class Html extends Markup
                 $name = $data_name;
             }
 
-            $option_value = array_get($data_option, $value, '');
-            $option_name = array_get($data_option, $name, '');
+            $option_value = Arr::get($data_option, $value, '');
+            $option_name = Arr::get($data_option, $name, '');
 
             if ($option_value === 'BREAK') {
                 $option_value = '--------------------';
@@ -362,7 +363,7 @@ class Html extends Markup
     {
         $form = self::createElement('form');
 
-        if (array_get($settings, 'file_upload')) {
+        if (Arr::get($settings, 'file_upload')) {
             $form->addElement('input')->type('hidden')->name('MAX_FILE_SIZE')->value(self::getFileUploadMaxSize());
         }
 
@@ -442,9 +443,9 @@ class Html extends Markup
         $icon = preg_replace('/(")(.*?)(")/', '$2', $icon);
 
         $icon_array = explode(',', $icon, 2);
-        $icon = array_get($icon_array, 0);
-        if (array_has($icon_array, 1)) {
-            $attributes = explode(',', array_get($icon_array, 1, ''));
+        $icon = Arr::get($icon_array, 0);
+        if (Arr::has($icon_array, 1)) {
+            $attributes = explode(',', Arr::get($icon_array, 1, ''));
         }
 
         if (substr($icon, 1, 1) == ' ') {
