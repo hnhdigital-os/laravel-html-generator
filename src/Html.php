@@ -1,6 +1,6 @@
 <?php
 
-namespace Bluora\LaravelHtmlGenerator;
+namespace HnhDigital\LaravelHtmlGenerator;
 
 use HtmlGenerator\Markup;
 use Illuminate\Support\Arr;

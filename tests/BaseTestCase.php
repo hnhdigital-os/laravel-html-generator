@@ -1,6 +1,6 @@
 <?php
 
-namespace Bluora\LaravelHtmlGenerator\Tests;
+namespace HnhDigital\LaravelHtmlGenerator\Tests;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;

@@ -22,13 +22,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Bluora\\LaravelHtmlGenerator\\": "src/"
+            "HnhDigital\\LaravelHtmlGenerator\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Bluora\\LaravelHtmlGenerator\\BladeDirectiveServiceProvider"
+                "HnhDigital\\LaravelHtmlGenerator\\BladeDirectiveServiceProvider"
             ]
         }
     },
