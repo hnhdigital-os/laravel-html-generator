@@ -890,6 +890,7 @@ class Html extends Markup
     {
         $href = route($route, $parameters);
         $href .= !empty($target) ? '#'.$target : '';
+
         return $this->addElement('a')->text($text)
             ->href($href);
     }
@@ -903,6 +904,7 @@ class Html extends Markup
     {
         $href = route($route, $parameters);
         $href .= !empty($target) ? '#'.$target : '';
+
         return $this->href($href);
     }
 
@@ -1091,13 +1093,13 @@ class Html extends Markup
      * Define text content.
      *
      * @param string $value
-     * @param array $args
+     * @param array  $args
      *
      * @return Markup instance
      */
     public function text($value, ...$args)
     {
-        if (sizeof($args)) {
+        if (count($args)) {
             $value = sprintf($value, ...$args);
         }
 
