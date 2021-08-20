@@ -154,7 +154,7 @@ class Html extends Markup
     /**
      * Add attribute if check is true.
      *
-     * @param bool   $check
+     * @param bool $check
      * @param ...$attr
      *
      * @return Html instance
@@ -1163,7 +1163,8 @@ class Html extends Markup
      */
     public function titleWhen($is_true)
     {
-        return parent::attr('title',
+        return parent::attr(
+            'title',
             $this->offsetGet('data-title-'.($is_true ? '1' : '0'))
         );
     }
