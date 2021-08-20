@@ -152,6 +152,23 @@ class Html extends Markup
     }
 
     /**
+     * Add attribute if check is true.
+     *
+     * @param bool   $check
+     * @param ...$attr
+     *
+     * @return Html instance
+     */
+    public function addAttrIf($check, ...$attr)
+    {
+        if ($check) {
+            return $this->attr(...$attr);
+        }
+
+        return $this;
+    }
+
+    /**
      * Shortcut to set('for', $value).
      *
      * @param string $value
