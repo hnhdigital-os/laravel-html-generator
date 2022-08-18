@@ -5,6 +5,10 @@ namespace HnhDigital\LaravelHtmlGenerator;
 use HtmlGenerator\Markup;
 use Illuminate\Support\Arr;
 
+/**
+ * @method static input()
+ * @mixin Html
+ */
 class Html extends Markup
 {
     /**
@@ -28,7 +32,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function addAction($url)
     {
@@ -38,7 +42,7 @@ class Html extends Markup
     /**
      * Add an action link.
      *
-     * @return Html instance
+     * @return Html
      */
     public function action($text, $controller_action, $parameters = [])
     {
@@ -49,7 +53,7 @@ class Html extends Markup
     /**
      * Add an action link (static).
      *
-     * @return Html instance
+     * @return Html
      */
     public static function actionLink($text, $controller_action, $parameters = [])
     {
@@ -60,7 +64,7 @@ class Html extends Markup
     /**
      * Add an action href.
      *
-     * @return Html instance
+     * @return Html
      */
     public function actionHref($action, $parameters = [])
     {
@@ -72,7 +76,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function alt($value)
     {
@@ -84,7 +88,7 @@ class Html extends Markup
      *
      * @param array $attributes
      *
-     * @return Html instance
+     * @return Html
      */
     public function addAttributes($attributes)
     {
@@ -103,7 +107,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function addClass($value)
     {
@@ -144,7 +148,7 @@ class Html extends Markup
      * @param string $class_name_1
      * @param string $class_name_0
      *
-     * @return Html instance
+     * @return Html
      */
     public function addClassIf($check, $class_name_1 = '', $class_name_0 = '')
     {
@@ -157,7 +161,7 @@ class Html extends Markup
      * @param bool $check
      * @param ...$attr
      *
-     * @return Html instance
+     * @return Html
      */
     public function addAttrIf($check, ...$attr)
     {
@@ -173,7 +177,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function addFor($value)
     {
@@ -230,7 +234,7 @@ class Html extends Markup
      * @param string $name
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function aria($name, $value)
     {
@@ -240,7 +244,7 @@ class Html extends Markup
     /**
      * Shortcut to set('autocomplete', $value). Only works with FORM, INPUT tags.
      *
-     * @return Html instance
+     * @return Html
      */
     public function autocomplete($value = 'off')
     {
@@ -254,7 +258,7 @@ class Html extends Markup
     /**
      * Shortcut to set('readonly', $value). Only works with FORM, INPUT tags.
      *
-     * @return Html instance
+     * @return Html
      */
     public function readonly($value = true)
     {
@@ -268,7 +272,7 @@ class Html extends Markup
     /**
      * Shortcut to set('autofocus', $value). Only works with BUTTON, INPUT, KEYGEN, SELECT, TEXTAREA tags.
      *
-     * @return Html instance
+     * @return Html
      */
     public function autofocus()
     {
@@ -285,7 +289,7 @@ class Html extends Markup
      * @param bool $value
      * @param bool $check_value
      *
-     * @return Html instance
+     * @return Html
      */
     public function checked($value = true, $check_value = true)
     {
@@ -336,7 +340,7 @@ class Html extends Markup
      * @param string $name
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function data($name, $value)
     {
@@ -349,7 +353,7 @@ class Html extends Markup
      * @param bool $value
      * @param bool $check_value
      *
-     * @return Html instance
+     * @return Html
      */
     public function disable($value = true, $check_value = true)
     {
@@ -366,7 +370,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function form($value)
     {
@@ -441,7 +445,7 @@ class Html extends Markup
     /**
      * Shortcut to set('download', $value).
      *
-     * @return Html instance
+     * @return Html
      */
     public function download($value)
     {
@@ -453,7 +457,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public static function icon($icon, $size = 0, $tag = 'i')
     {
@@ -497,7 +501,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function addicon($icon, $tag = 'i')
     {
@@ -522,7 +526,7 @@ class Html extends Markup
      * @param int    $size
      * @param string $text
      *
-     * @return Html instance
+     * @return Html
      */
     public static function h($size, $text)
     {
@@ -534,7 +538,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function height($value)
     {
@@ -546,7 +550,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function hidden()
     {
@@ -563,7 +567,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function href($value = '')
     {
@@ -579,7 +583,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function id($value)
     {
@@ -591,7 +595,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function scriptLink($value = 0)
     {
@@ -605,7 +609,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function label($text)
     {
@@ -624,7 +628,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function lang($value)
     {
@@ -634,7 +638,7 @@ class Html extends Markup
     /**
      * Add an route link (static).
      *
-     * @return Html instance
+     * @return Html
      */
     public static function urlLink($text, $url, $parameters = [], $secure = null)
     {
@@ -645,7 +649,7 @@ class Html extends Markup
     /**
      * Add an route link.
      *
-     * @return Html instance
+     * @return Html
      */
     public function url($text, $url, $parameters = [], $secure = null)
     {
@@ -658,7 +662,7 @@ class Html extends Markup
      *
      * @param int $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function min($value)
     {
@@ -674,7 +678,7 @@ class Html extends Markup
      *
      * @param int $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function max($value)
     {
@@ -690,7 +694,7 @@ class Html extends Markup
      *
      * @param int $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function maxlength($value)
     {
@@ -706,7 +710,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function name($value)
     {
@@ -722,7 +726,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function openNew($open_normally = false)
     {
@@ -739,7 +743,7 @@ class Html extends Markup
      * @param string $name
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function on($name, $value)
     {
@@ -753,7 +757,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function opacity($value)
     {
@@ -770,7 +774,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function pattern($value)
     {
@@ -782,7 +786,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function placeholder($value)
     {
@@ -796,7 +800,7 @@ class Html extends Markup
      * @param bool   $blank_first_option
      * @param string $value_first_option
      *
-     * @return Html instance
+     * @return Html
      */
     public static function prepareOptions($options, $blank_first_option = false, $name_first_option = '', $value_first_option = '')
     {
@@ -815,7 +819,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function method($value = 'POST')
     {
@@ -827,7 +831,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function multiple()
     {
@@ -839,7 +843,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function removeClass($value)
     {
@@ -856,7 +860,7 @@ class Html extends Markup
      * @param bool $required
      * @param bool $required_value
      *
-     * @return Html instance
+     * @return Html
      */
     public function required($required = true, $required_value = true)
     {
@@ -875,7 +879,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function role($value)
     {
@@ -887,7 +891,7 @@ class Html extends Markup
      *
      * @param int $rows
      *
-     * @return Html instance
+     * @return Html
      */
     public function rows($rows)
     {
@@ -901,7 +905,7 @@ class Html extends Markup
     /**
      * Add an route link.
      *
-     * @return Html instance
+     * @return Html
      */
     public function route($text, $route, $parameters = [], $target = '')
     {
@@ -915,7 +919,7 @@ class Html extends Markup
     /**
      * Add an route href.
      *
-     * @return Html instance
+     * @return Html
      */
     public function routeHref($route, $parameters = [], $target = '')
     {
@@ -931,7 +935,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function rtl($is_rtl = false)
     {
@@ -950,7 +954,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function selected()
     {
@@ -960,7 +964,7 @@ class Html extends Markup
     /**
      * Add an route link (static).
      *
-     * @return Html instance
+     * @return Html
      */
     public static function routeLink($text, $route, $parameters = [], $link_attributes = [], $extra_link = '')
     {
@@ -1037,7 +1041,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function src($value)
     {
@@ -1055,7 +1059,7 @@ class Html extends Markup
      * @param string $style_1
      * @param string $style_0
      *
-     * @return Html instance
+     * @return Html
      */
     public function addStyleIf($check, $style_1 = '', $style_0 = '')
     {
@@ -1067,7 +1071,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function style($value, $replace = false)
     {
@@ -1087,7 +1091,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function tabindex($value)
     {
@@ -1099,7 +1103,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function target($value)
     {
@@ -1147,7 +1151,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function title($value)
     {
@@ -1174,7 +1178,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function type($value)
     {
@@ -1192,21 +1196,14 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function width($value)
     {
         return parent::attr('width', $value);
     }
 
-    /**
-     * Shortcut to set('value', $value).
-     *
-     * @param string $value
-     *
-     * @return Html instance
-     */
-    public function value($value = '')
+    public function value($value = ''): Html
     {
         return parent::attr('value', $value);
     }
@@ -1216,7 +1213,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function val($value = '')
     {
@@ -1228,7 +1225,7 @@ class Html extends Markup
      *
      * @param string $value
      *
-     * @return Html instance
+     * @return Html
      */
     public function valueDate($value = '', $value_format = '', $setting_format = '')
     {
@@ -1264,7 +1261,7 @@ class Html extends Markup
      * @param string $tag
      * @param array  $arguments
      *
-     * @return Html instance
+     * @return Html
      */
     public function __call($tag, $arguments)
     {
@@ -1279,7 +1276,7 @@ class Html extends Markup
      * @param string $tag
      * @param array  $arguments
      *
-     * @return Html instance
+     * @return Html
      */
     public static function __callStatic($tag, $arguments)
     {
