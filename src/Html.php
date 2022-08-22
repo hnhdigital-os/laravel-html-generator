@@ -6,7 +6,9 @@ use HtmlGenerator\Markup;
 use Illuminate\Support\Arr;
 
 /**
- * @method static input()
+ * @method static a($arguments)
+ * @method static div($arguments)
+ * @method static input($arguments)
  * @mixin Html
  */
 class Html extends Markup
