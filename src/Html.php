@@ -6,9 +6,19 @@ use HtmlGenerator\Markup;
 use Illuminate\Support\Arr;
 
 /**
- * @method static a($arguments)
- * @method static div($arguments)
- * @method static input($arguments)
+ * @method static a(...$arguments)
+ * @method static button(...$arguments)
+ * @method static div(...$arguments)
+ * @method static input(...$arguments)
+ * @method static li(...$arguments)
+ * @method static p(...$arguments)
+ * @method static img(...$arguments)
+ * @method static span(...$arguments)
+ * @method static td(...$arguments)
+ * @method static tr(...$arguments)
+ * @method static val(...$arguments)
+ * @method static ul(...$arguments)
+ * @method static table(...$arguments)
  * @mixin Html
  */
 class Html extends Markup
@@ -309,7 +319,7 @@ class Html extends Markup
      * @param mixed  $attributes1
      * @param mixed  $attributes2
      *
-     * @return Markup instance
+     * @return Html
      */
     public static function createElement($tag = '', $attributes1 = [], $attributes2 = [])
     {
@@ -1001,7 +1011,7 @@ class Html extends Markup
      * @param string $name
      * @param string $value
      *
-     * @return Markup instance
+     * @return Html
      */
     public function set($name, $value = null)
     {
@@ -1019,7 +1029,7 @@ class Html extends Markup
      * @param string $name
      * @param string $value
      *
-     * @return Markup instance
+     * @return Html
      */
     public function setAttribute($name, $value)
     {
@@ -1118,7 +1128,7 @@ class Html extends Markup
      * @param string $value
      * @param array  $args
      *
-     * @return Markup instance
+     * @return Html
      */
     public function text($value, ...$args)
     {
@@ -1129,6 +1139,7 @@ class Html extends Markup
         if ($this->tag === 'textarea') {
             $value = htmlspecialchars($value);
         }
+
         parent::text($value);
 
         return $this;
@@ -1141,7 +1152,7 @@ class Html extends Markup
      * @param string $value
      * @param array  $args
      *
-     * @return Markup instance
+     * @return Html
      */
     public function textIf($test, $value, ...$args)
     {
@@ -1213,7 +1224,7 @@ class Html extends Markup
     /**
      * Shortcut to set('value', $value).
      *
-     * @param string $value
+     * @param string|int|null $value
      *
      * @return Html
      */
