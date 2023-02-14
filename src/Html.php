@@ -234,7 +234,7 @@ class Html extends Markup
 
     /**
      * Shortcut to set('autocomplete', $value). Only works with FORM, INPUT tags.
-     * 
+     *
      * @param string $value
      */
     public function autocomplete($value = 'off'): Html
@@ -373,8 +373,9 @@ class Html extends Markup
     /**
      * Returns a file size limit in bytes based on the PHP upload_max_filesize
      * and post_max_size.
-     * 
+     *
      * @param string|int|bool $convert_to_bytes
+     *
      * @return int|string
      */
     public static function getFileUploadMaxSize($convert_to_bytes = true)
@@ -431,9 +432,9 @@ class Html extends Markup
     /**
      * Shortcut to creating a FontAwesome item (static).
      *
-     * @param string $value
+     * @param string     $value
      * @param string|int $size
-     * @param string $ta
+     * @param string     $ta
      */
     public static function icon($icon, $size = 0, $tag = 'i'): Html
     {
@@ -496,8 +497,8 @@ class Html extends Markup
     /**
      * Shortcut to createElement('h'.$size, $text).
      *
-     * @param int|string    $size
-     * @param string $text
+     * @param int|string $size
+     * @param string     $text
      */
     public static function h($size, $text): Html
     {
@@ -829,7 +830,7 @@ class Html extends Markup
      *
      * @param string $text
      * @param string $route
-     * @param array $parameters
+     * @param array  $parameters
      * @param string $target
      */
     public function route($text, $route, $parameters = [], $target = ''): Html
@@ -845,7 +846,7 @@ class Html extends Markup
      * Add an route href.
      *
      * @param string $route
-     * @param array $parameters
+     * @param array  $parameters
      * @param string $target
      */
     public function routeHref($route, $parameters = [], $target = ''): Html
@@ -887,8 +888,8 @@ class Html extends Markup
      *
      * @param string $text
      * @param string $route
-     * @param array $parameters
-     * @param array $link_attributes
+     * @param array  $parameters
+     * @param array  $link_attributes
      * @param string $extra_link
      */
     public static function routeLink($text, $route, $parameters = [], $link_attributes = [], $extra_link = ''): Html
@@ -898,7 +899,7 @@ class Html extends Markup
 
         foreach ($link_attributes as $method_name => $value) {
             if (method_exists($element, $method_name)) {
-                if (! is_array($value)) {
+                if (!is_array($value)) {
                     $value = [$value];
                 }
 
@@ -988,7 +989,7 @@ class Html extends Markup
      * Shortcut to set('style', $value).
      *
      * @param string $value
-     * @param bool $replace
+     * @param bool   $replace
      */
     public function style($value, $replace = false): Html
     {
