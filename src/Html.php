@@ -19,6 +19,7 @@ use Illuminate\Support\Arr;
  * @method static val(...$arguments)
  * @method static ul(...$arguments)
  * @method static table(...$arguments)
+ *
  * @mixin Html
  */
 class Html extends Markup
