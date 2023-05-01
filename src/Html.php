@@ -208,10 +208,12 @@ class Html extends Markup
             }
 
             $option = $this->addElement('option')->value($option_value)->text($option_name);
-            foreach (['style', 'class', 'id', 'disabled'] as $attr) {
-                if (isset($data_option[$attr])) {
-                    $option->attr($attr, $data_option[$attr]);
+            foreach ($data_option as $key => $value) {
+                if ($key === $data_value || $key === $data_name || is_int($key)) {
+                    continue;
                 }
+
+                $option->attr($key, $value);
             }
             if (!empty($selected_value) && in_array($option_value, $selected_value)) {
                 $option->selected('selected');
