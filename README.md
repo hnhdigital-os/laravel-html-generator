@@ -2,8 +2,6 @@
 
 [![Latest Stable Version](https://poser.pugx.org/hnhdigital-os/laravel-html-generator/v/stable.svg)](https://packagist.org/packages/hnhdigital-os/laravel-html-generator) [![Total Downloads](https://poser.pugx.org/hnhdigital-os/laravel-html-generator/downloads.svg)](https://packagist.org/packages/hnhdigital-os/laravel-html-generator) [![Latest Unstable Version](https://poser.pugx.org/hnhdigital-os/laravel-html-generator/v/unstable.svg)](https://packagist.org/packages/hnhdigital-os/laravel-html-generator) [![License](https://poser.pugx.org/hnhdigital-os/laravel-html-generator/license.svg)](https://packagist.org/packages/hnhdigital-os/laravel-html-generator)
 
-[![Build Status](https://travis-ci.org/hnhdigital-os/laravel-html-generator.svg?branch=master)](https://travis-ci.org/hnhdigital-os/laravel-html-generator) [![StyleCI](https://styleci.io/repos/71969622/shield?branch=master)](https://styleci.io/repos/71969622) [![Test Coverage](https://codeclimate.com/github/hnhdigital-os/laravel-html-generator/badges/coverage.svg)](https://codeclimate.com/github/hnhdigital-os/laravel-html-generator/coverage) [![Issue Count](https://codeclimate.com/github/hnhdigital-os/laravel-html-generator/badges/issue_count.svg)](https://codeclimate.com/github/hnhdigital-os/laravel-html-generator) [![Code Climate](https://codeclimate.com/github/hnhdigital-os/laravel-html-generator/badges/gpa.svg)](https://codeclimate.com/github/hnhdigital-os/laravel-html-generator) 
-
 Create HTML tags and render them efficiently.
 
 Extends upon [Airmanbzh/php-html-generator](https://github.com/Airmanbzh/php-html-generator) with some Laravel related integration.
