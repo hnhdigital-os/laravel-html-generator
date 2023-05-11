@@ -8,12 +8,13 @@
         }
     ],
     "require": {
-        "php": "^8.0.2",
-        "illuminate/support": "^9.0",
+        "php": "^8.0",
+        "laravel/framework": "^9.21|^10.0",
         "airmanbzh/php-html-generator": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.0"
+        "orchestra/testbench": "^7.0|^8.0",
+        "phpunit/phpunit": "^9.3"
     },
     "support": {
         "issues": "https://github.com/hnhdigital-os/laravel-html-generator/issues"
@@ -34,10 +35,7 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "process-timeout": 2000,
-        "sort-packages": true,
-        "platform": {
-            "php": "8.0.2"
-        }
+        "sort-packages": true
     },
     "prefer-stable": true,
     "minimum-stability" : "dev"
