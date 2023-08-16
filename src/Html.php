@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 
 /**
  * @method class(...$arguments)
+ * @method for(...$arguments)
  *
  * @mixin Html
  */
@@ -31,16 +32,24 @@ class Html extends Markup
     /**
      * Shortcut to set('action', $url).
      */
-    public function addAction(string $url): Html
+    public function addAction(?string $ur = nulll): Html
     {
+        if (blank($url)) {
+            return $this;
+        }
+
         return parent::attr('action', $url);
     }
 
     /**
      * Add an action link.
      */
-    public function action(string $text, string $controller_action, array $parameters = []): Html
+    public function action(?string $text = null, ?string $controller_action = null, array $parameters = []): Html
     {
+        if (blank($text) || blank($controller_action)) {
+            return $this;
+        }
+
         return $this->addElement('a')->text($text)
             ->href(action($controller_action, $parameters));
     }
@@ -48,8 +57,14 @@ class Html extends Markup
     /**
      * Add an action link (static).
      */
-    public static function actionLink(string $text, string $controller_action, array $parameters = []): Html
+    public static function actionLink(?string $text = null, ?string $controller_action = null, array $parameters = []): Html
     {
+        $text = $text ?? '';
+
+        if (blank($controller_action)) {
+            return self::addElement('a')->text($text);
+        }
+
         return self::addElement('a')->text($text)
             ->href(action($controller_action, $parameters));
     }
@@ -57,28 +72,37 @@ class Html extends Markup
     /**
      * Add an action href.
      */
-    public function actionHref(string $action, array $parameters = []): Html
+    public function actionHref(?string $action = null, array $parameters = []): Html
     {
+        if (blank($action)) {
+            return $this;
+        }
+
         return $this->href(action($action, $parameters));
     }
 
     /**
      * Shortcut to set('alt', $value).
      */
-    public function alt(string $value): Html
+    public function alt(?string $value = null): Html
     {
+        if (blank($value)) {
+            return $this;
+        }
+
         return parent::attr('alt', e($value));
     }
 
     /**
      * Add an array of attributes.
      */
-    public function addAttributes(array $attributes): Html
+    public function addAttributes(array $attributes = []): Html
     {
         foreach ($attributes as $name => $value) {
             if (!is_array($value)) {
                 $value = [$value];
             }
+
             parent::attr($name, ...$value);
         }
 
@@ -86,30 +110,47 @@ class Html extends Markup
     }
 
     /**
+     * Add an array of attributes.
+     */
+    public function attributes(array $attributes = []): Html
+    {
+        return $this->addAttributes($attributes);
+    }
+
+    /**
      * Add a class to classList.
      */
-    public function addClass(array|string $value): Html
+    public function addClass(array|string|null $value = ''): Html
     {
+        if (blank($value)) {
+            return $this;
+        }
+
         $paramaters = func_get_args();
+
         if (count($paramaters) > 1) {
             $value = $paramaters;
         }
+
         if (!is_array($value)) {
             $value = explode(' ', $value);
         }
+
         if (!isset($this->attributeList['class']) || is_null($this->attributeList['class'])) {
             $this->attributeList['class'] = [];
         }
+
         if (!is_array($this->attributeList['class'])) {
-            if (!empty($this->attributeList['class'])) {
+            if (filled($this->attributeList['class'])) {
                 $this->attributeList['class'] = [$this->attributeList['class']];
             } else {
                 $this->attributeList['class'] = [];
             }
         }
+
         foreach ($value as $class_name) {
             $class_name = trim($class_name);
-            if (!empty($class_name)) {
+            if (filled($class_name)) {
                 if (function_exists('hookAddClassHtmlTag')) {
                     hookAddClassHtmlTag($class_name);
                 }
@@ -123,16 +164,22 @@ class Html extends Markup
     /**
      * Add a class based on a boolean value.
      */
-    public function addClassIf(?bool $check, string $class_name_1 = '', string $class_name_0 = ''): Html
-    {
+    public function addClassIf(
+        ?bool $check = false,
+        array|string|null $class_name_1 = '',
+        array|string|null $class_name_0 = ''
+    ): Html {
         return $this->addClass($check ? $class_name_1 : $class_name_0);
     }
 
     /**
      * Alias for addClassIf.
      */
-    public function classIf(?bool $check, string $class_name_1 = '', string $class_name_0 = ''): Html
-    {
+    public function classIf(
+        ?bool $check = false,
+        array|string|null $class_name_1 = '',
+        array|string|null $class_name_0 = ''
+    ): Html {
         return $this->addClassIf($check, $class_name_1, $class_name_0);
     }
 
@@ -141,7 +188,7 @@ class Html extends Markup
      *
      * @param mixed ...$attr
      */
-    public function addAttrIf(?bool $check, ...$attr): Html
+    public function addAttrIf(?bool $check = false, ...$attr): Html
     {
         if ($check) {
             return $this->attr(...$attr);
@@ -150,10 +197,15 @@ class Html extends Markup
         return $this;
     }
 
+    public function attrIf(?bool $check = false, ...$attr): Html
+    {
+        return $this->addAttrIf($check, ...$attr);
+    }
+
     /**
      * Shortcut to set('for', $value).
      */
-    public function addFor(string $value): Html
+    public function addFor(string $value = null): Html
     {
         return parent::attr('for', $value);
     }
@@ -167,7 +219,7 @@ class Html extends Markup
         bool|string|null $data_name,
         array|string|null $selected_value = []
     ): Html {
-        if (!is_array($selected_value) && (strlen($selected_value) || !empty($selected_value))) {
+        if (!is_array($selected_value) && (strlen($selected_value) || filled($selected_value))) {
             $selected_value = [$selected_value];
         }
 
@@ -193,7 +245,10 @@ class Html extends Markup
                 $data_option['disabled'] = 'disabled';
             }
 
-            $option = $this->addElement('option')->value($option_value)->text($option_name);
+            $option = $this->addElement('option')
+                ->value($option_value)
+                ->text($option_name);
+
             foreach ($data_option as $key => $value) {
                 if ($key === $data_value || $key === $data_name || is_int($key)) {
                     continue;
@@ -201,7 +256,7 @@ class Html extends Markup
 
                 $option->attr($key, $value);
             }
-            if (!empty($selected_value) && in_array($option_value, $selected_value)) {
+            if (filled($selected_value) && in_array($option_value, $selected_value)) {
                 $option->selected('selected');
             }
         }
@@ -212,7 +267,7 @@ class Html extends Markup
     /**
      * Shortcut to set('aria-$name', $value).
      */
-    public function aria(string $name, string $value): Html
+    public function aria(string $name = null, string $value = null): Html
     {
         return parent::attr('aria-'.$name, $value);
     }
@@ -279,20 +334,27 @@ class Html extends Markup
     public static function createElement($tag = '', $attributes1 = [], $attributes2 = []): Html
     {
         $tag_object = parent::createElement($tag);
+
         $tag_object->setTag($tag);
+
         $attributes = $attributes1;
-        if (!is_array($attributes1) && strlen($attributes1) > 0) {
+
+        if (! is_array($attributes1) && strlen($attributes1) > 0) {
             $tag_object->text($attributes1);
             $attributes = $attributes2;
         }
+
         if (is_array($attributes)) {
             foreach ($attributes as $name => $value) {
-                if (method_exists($tag_object, $name)) {
-                    if (!is_array($value)) {
-                        $value = [$value];
-                    }
-                    call_user_func_array([$tag_object, $name], $value);
+                if (! method_exists($tag_object, $name)) {
+                    continue;
                 }
+
+                if (!is_array($value)) {
+                    $value = [$value];
+                }
+
+                call_user_func_array([$tag_object, $name], $value);
             }
         }
 
@@ -304,8 +366,14 @@ class Html extends Markup
     /**
      * Shortcut to set('data-$name', $value).
      */
-    public function data(string $name, mixed $value): Html
+    public function data(?string $name = null, mixed $value = null): Html
     {
+        if (is_null($name)) {
+            return $this;
+        }
+
+        $value = blank($value) ? '' : $value;
+
         return parent::attr('data-'.$name, $value);
     }
 
@@ -325,8 +393,12 @@ class Html extends Markup
     /**
      * Shortcut to set('form', $value).
      */
-    public function form(string $value): Html
+    public function form(?string $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('form', $value);
     }
 
@@ -338,7 +410,10 @@ class Html extends Markup
         $form = self::createElement('form');
 
         if (Arr::get($settings, 'file_upload')) {
-            $form->addElement('input')->type('hidden')->name('MAX_FILE_SIZE')->value(self::getFileUploadMaxSize());
+            $form->addElement('input')
+                ->type('hidden')
+                ->name('MAX_FILE_SIZE')
+                ->value(self::getFileUploadMaxSize());
         }
 
         return $form;
@@ -365,6 +440,7 @@ class Html extends Markup
             // If upload_max_size is less, then reduce. Except if upload_max_size is
             // zero, which indicates no limit.
             $upload_max = self::parseSize(ini_get('upload_max_filesize'));
+
             if ($upload_max > 0 && $upload_max < $max_size) {
                 $max_size = $upload_max;
                 $max_size_string = ini_get('upload_max_filesize');
@@ -396,8 +472,12 @@ class Html extends Markup
     /**
      * Shortcut to set('download', $value).
      */
-    public function download(string $value): Html
+    public function download(?string $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('download', $value);
     }
 
@@ -473,8 +553,12 @@ class Html extends Markup
     /**
      * Shortcut to set('height', $value).
      */
-    public function height(string|int $value): Html
+    public function height(string|int|null $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('height', $value);
     }
 
@@ -486,6 +570,7 @@ class Html extends Markup
         if (!isset($this->attributeList['style'])) {
             $this->attributeList['style'] = '';
         }
+
         $this->attributeList['style'] .= 'display:hidden;';
 
         return $this;
@@ -496,7 +581,7 @@ class Html extends Markup
      */
     public function href(?string $value = ''): Html
     {
-        if ($this->tag === 'a' && !is_null($value)) {
+        if ($this->tag === 'a' && ! is_null($value)) {
             return parent::attr('href', $value);
         }
 
@@ -506,8 +591,12 @@ class Html extends Markup
     /**
      * Shortcut to set('id', $value).
      */
-    public function id(string|int $value): Html
+    public function id(string|int|null $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return $this->set('id', $value);
     }
 
@@ -565,8 +654,12 @@ class Html extends Markup
     /**
      * Shortcut to set('min', $value).
      */
-    public function min(string|int|float $value): Html
+    public function min(string|int|float|null $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         if ($this->tag === 'input') {
             return parent::attr('min', (string) floatval($value));
         }
@@ -577,8 +670,12 @@ class Html extends Markup
     /**
      * Shortcut to set('max', $value).
      */
-    public function max(string|int|float $value): Html
+    public function max(string|int|float|null $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         if ($this->tag === 'input') {
             return parent::attr('max', (string) floatval($value));
         }
@@ -589,8 +686,12 @@ class Html extends Markup
     /**
      * Shortcut to set('maxlength', $value).
      */
-    public function maxlength(string|int $value): Html
+    public function maxlength(string|int|null $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         if ($this->tag === 'input') {
             return parent::attr('maxlength', (string) intval($value));
         }
@@ -615,7 +716,7 @@ class Html extends Markup
      */
     public function openNew(bool $open_normally = false): Html
     {
-        if (!$open_normally && $this->tag === 'a') {
+        if ($this->tag === 'a' && ! $open_normally) {
             return parent::attr('target', '_blank');
         }
 
@@ -625,8 +726,12 @@ class Html extends Markup
     /**
      * Shortcut to set('on...', $value).
      */
-    public function on(string $name, string $value): Html
+    public function on(?string $name = null, ?string $value = null): Html
     {
+        if (is_null($name) || is_null($value)) {
+            return $this;
+        }
+
         parent::attr('on'.$name, $value);
 
         return $this;
@@ -635,9 +740,13 @@ class Html extends Markup
     /**
      * Shortcut to set('style', 'opacity: xx').
      */
-    public function opacity(string|float $value): Html
+    public function opacity(string|float|null $value = null): Html
     {
-        if (!isset($this->attributeList['style'])) {
+        if (is_null($value)) {
+            return $this;
+        }
+
+        if (! isset($this->attributeList['style'])) {
             $this->attributeList['style'] = '';
         }
 
@@ -651,16 +760,24 @@ class Html extends Markup
     /**
      * Shortcut to set('pattern', $value).
      */
-    public function pattern(string $value): Html
+    public function pattern(?string $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('pattern', $value);
     }
 
     /**
      * Shortcut to set('placeholder', $value).
      */
-    public function placeholder(string $value): Html
+    public function placeholder(?string $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('placeholder', $value);
     }
 
@@ -693,8 +810,12 @@ class Html extends Markup
     /**
      * Shortcut to set('method', $value).
      */
-    public function method(string $value = 'POST'): Html
+    public function method(?string $value = 'POST'): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('method', $value);
     }
 
@@ -709,8 +830,12 @@ class Html extends Markup
     /**
      * Remove a class from classList.
      */
-    public function removeClass(string $value): Html
+    public function removeClass(?string $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         if (!is_null($this->attributeList['class'])) {
             unset($this->attributeList['class'][array_search($value, $this->attributeList['class'])]);
         }
@@ -721,7 +846,7 @@ class Html extends Markup
     /**
      * Shortcut to set('required', $value).
      */
-    public function required(bool $required = true, bool $required_value = true): Html
+    public function required(mixed $required = true, mixed $required_value = true): Html
     {
         if ($required == $required_value) {
             $this->addClass('required');
@@ -736,18 +861,26 @@ class Html extends Markup
     /**
      * Shortcut to set('role', $value).
      */
-    public function role(string $value): Html
+    public function role(?string $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('role', $value);
     }
 
     /**
      * Shortcut to set('rows', $value).
      */
-    public function rows(int|string $rows): Html
+    public function rows(int|string|null $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         if ($this->tag === 'textarea') {
-            return parent::attr('rows', (string) $rows);
+            return parent::attr('rows', (string) $value);
         }
 
         return $this;
@@ -756,22 +889,34 @@ class Html extends Markup
     /**
      * Add an route link.
      */
-    public function route(?string $text, string $route, array $parameters = [], string $target = ''): Html
+    public function route(?string $text = null, ?string $route = null, array $parameters = [], string $target = ''): Html
     {
-        $href = route($route, $parameters);
-        $href .= !empty($target) ? '#'.$target : '';
+        if (is_null($text)) {
+            return $this;
+        }
 
-        return $this->addElement('a')->text($text ?? '')
+        if (is_null($route)) {
+            return $this->addElement('a')->text($text);
+        }
+
+        $href = route($route, $parameters);
+        $href .= filled($target) ? '#'.$target : '';
+
+        return $this->addElement('a')->text($text)
             ->href($href);
     }
 
     /**
      * Add an route href.
      */
-    public function routeHref(?string $route, array $parameters = [], string $target = ''): Html
+    public function routeHref(?string $route = null, array $parameters = [], string $target = ''): Html
     {
+        if (is_null($route)) {
+            return $this;
+        }
+
         $href = route($route, $parameters);
-        $href .= !empty($target) ? '#'.$target : '';
+        $href .= filled($target) ? '#'.$target : '';
 
         return $this->href($href);
     }
@@ -781,11 +926,7 @@ class Html extends Markup
      */
     public function rtl(bool $is_rtl = false): Html
     {
-        if ($is_rtl) {
-            parent::attr('dir', 'rtl');
-        } else {
-            parent::attr('dir', 'ltr');
-        }
+        parent::attr('dir', $is_rtl ? 'rtl' : 'ltr');
 
         return $this;
     }
@@ -802,12 +943,20 @@ class Html extends Markup
      * Add an route link (static).
      */
     public static function routeLink(
-        string $text,
-        string $route,
+        ?string $text = null,
+        ?string $route = null,
         array $parameters = [],
         array $link_attributes = [],
         string $extra_link = ''
     ): Html {
+        if (is_null($text)) {
+            return $this->addElement('a');
+        }
+
+        if (is_null($route)) {
+            return $this->addElement('a')->text($text);
+        }
+
         $element = self::createElement('a')->text($text)
             ->href(route($route, $parameters).$extra_link);
 
@@ -827,22 +976,31 @@ class Html extends Markup
     /**
      * Return string of this object.
      */
-    public function s(string|bool|null $return_string = true): string
+    public function s(\Closure|string|bool|null $value = true): string
     {
-        return ($return_string) ? (string) $this : '';
+        if (is_callable($value)) {
+            $value = $value();
+        }
+
+        return ($value) ? (string) $this : '';
     }
 
     /**
      * (Re)Define an attribute.
      *
-     * @param string $name
-     * @param string $value
+     * @param ?string $name
+     * @param ?string $value
      */
     public function set($name, $value = null): Html
     {
+        if (is_null($name)) {
+            return $this;
+        }
+
         if ($name === 'value') {
             $value = htmlspecialchars($value);
         }
+
         parent::set($name, $value);
 
         return $this;
@@ -851,8 +1009,12 @@ class Html extends Markup
     /**
      * Alias for setting an attribute.
      */
-    public function setAttribute(string $name, string $value): Html
+    public function setAttribute(?string $name, ?string $value): Html
     {
+        if (is_null($name)) {
+            return $this;
+        }
+
         return $this->set($name, $value);
     }
 
@@ -869,8 +1031,12 @@ class Html extends Markup
     /**
      * Shortcut to set('src', $value).
      */
-    public function src(string $value): Html
+    public function src(?string $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         if ($this->tag === 'img') {
             return parent::attr('src', $value);
         }
@@ -881,22 +1047,31 @@ class Html extends Markup
     /**
      * Add a style based on a boolean value.
      */
-    public function addStyleIf(?bool $check, string $style_1 = '', string $style_0 = ''): Html
-    {
+    public function addStyleIf(
+        ?bool $check = false,
+        ?string $style_1 = null,
+        ?string $style_0 = null
+    ): Html {
         return $this->style($check ? $style_1 : $style_0);
     }
 
     /**
      * Shortcut to set('style', $value).
      */
-    public function style(string $value, bool $replace = false): Html
+    public function style(?string $value = null, bool $replace = false): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         if ($replace) {
             return parent::attr('style', $value);
         }
+
         if (!isset($this->attributeList['style'])) {
             $this->attributeList['style'] = '';
         }
+
         $this->attributeList['style'] .= $value;
 
         return $this;
@@ -905,27 +1080,39 @@ class Html extends Markup
     /**
      * Shortcut to set('tabindex', $value).
      */
-    public function tabindex(int|string $value): Html
+    public function tabindex(int|string|null $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('tabindex', (string) $value);
     }
 
     /**
      * Shortcut to set('target', $value).
      */
-    public function target(string $value): Html
+    public function target(?string $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('target', $value);
     }
 
     /**
      * Define text content.
      *
-     * @param string $value
+     * @param ?string $value
      * @param mixed  $args
      */
     public function text($value, ...$args): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         if (count($args)) {
             $value = sprintf($value, ...$args);
         }
@@ -944,7 +1131,7 @@ class Html extends Markup
      *
      * @param mixed $args
      */
-    public function textIf(?bool $test, string $value, ...$args): Html
+    public function textIf(?bool $test = false, ?string $value = null, ...$args): Html
     {
         return $test ? $this->text($value, ...$args) : $this;
     }
@@ -975,10 +1162,14 @@ class Html extends Markup
     /**
      * Shortcut to set('type', $value).
      *
-     * @param string $value
+     * @param ?string $value
      */
     public function type(string $value): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         switch ($value) {
             case 'checkbox':
                 $this->value(1);
@@ -991,8 +1182,12 @@ class Html extends Markup
     /**
      * Shortcut to set('width', $value).
      */
-    public function width(string|int $value): Html
+    public function width(string|int|null $value = null): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('width', $value);
     }
 
@@ -1001,7 +1196,7 @@ class Html extends Markup
      */
     public function value(mixed $value = ''): Html
     {
-        return parent::attr('value', $value);
+        return parent::attr('value', $value ?? '');
     }
 
     /**
@@ -1051,9 +1246,14 @@ class Html extends Markup
      */
     public function __call($tag, $arguments): Html
     {
-        // Capture a call to ->class()
+        // Reserved word: `call` ->class()
         if ($tag === 'class') {
             return $this->addClass(...$arguments);
+        }
+
+        // Reserved word: `for` ->for()
+        if ($tag === 'for') {
+            return $this->addFor(...$arguments);
         }
 
         array_unshift($arguments, $tag);
