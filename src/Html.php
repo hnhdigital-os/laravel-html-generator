@@ -142,7 +142,7 @@ class Html extends Markup
     }
 
     /**
-     * Alias for addClassIf
+     * Alias for addClassIf.
      */
     public function classIf(?bool $check, string $class_name_1 = '', string $class_name_0 = ''): Html
     {
