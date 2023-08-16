@@ -28,7 +28,7 @@ class Html extends Markup
     /**
      * Auto close these tags.
      *
-     * @var array $tag
+     * @var array
      */
     protected $autocloseTagsList = [
         'img', 'br', 'hr', 'input', 'area', 'link', 'meta', 'param',
@@ -37,7 +37,7 @@ class Html extends Markup
     /**
      * Current tag.
      *
-     * @var string $tag
+     * @var string
      */
     protected $tag = 'tag';
 
@@ -78,7 +78,7 @@ class Html extends Markup
     /**
      * Shortcut to set('alt', $value).
      */
-    public function alt(string  $value): Html
+    public function alt(string $value): Html
     {
         return parent::attr('alt', e($value));
     }
@@ -483,7 +483,7 @@ class Html extends Markup
     /**
      * Shortcut to set('height', $value).
      */
-    public function height(string|int  $value): Html
+    public function height(string|int $value): Html
     {
         return parent::attr('height', $value);
     }
@@ -506,7 +506,7 @@ class Html extends Markup
      */
     public function href(?string $value = ''): Html
     {
-        if ($this->tag === 'a' && ! is_null($value)) {
+        if ($this->tag === 'a' && !is_null($value)) {
             return parent::attr('href', $value);
         }
 
@@ -575,7 +575,7 @@ class Html extends Markup
     /**
      * Shortcut to set('min', $value).
      */
-    public function min(string|int|float$value): Html
+    public function min(string|int|float $value): Html
     {
         if ($this->tag === 'input') {
             return parent::attr('min', (string) floatval($value));
@@ -647,7 +647,7 @@ class Html extends Markup
      */
     public function opacity(string|float $value): Html
     {
-        if (! isset($this->attributeList['style'])) {
+        if (!isset($this->attributeList['style'])) {
             $this->attributeList['style'] = '';
         }
 
@@ -932,7 +932,7 @@ class Html extends Markup
      * Define text content.
      *
      * @param string $value
-     * @param mixed   $args
+     * @param mixed  $args
      */
     public function text($value, ...$args): Html
     {
@@ -1026,7 +1026,7 @@ class Html extends Markup
      * Shortcut to set('value', $value)
      * and set('data-datepicker-format', $setting_format).
      */
-    public function valueDate(string $value = '', string $value_format = '', string$setting_format = ''): Html
+    public function valueDate(string $value = '', string $value_format = '', string $setting_format = ''): Html
     {
         if (is_object($value)) {
             $value = $value->format($value_format);
