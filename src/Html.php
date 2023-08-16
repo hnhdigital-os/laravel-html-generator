@@ -7,19 +7,6 @@ use Illuminate\Support\Arr;
 
 /**
  * @method class(...$arguments)
- * @method static a(...$arguments)
- * @method static button(...$arguments)
- * @method static div(...$arguments)
- * @method static input(...$arguments)
- * @method static li(...$arguments)
- * @method static p(...$arguments)
- * @method static img(...$arguments)
- * @method static span(...$arguments)
- * @method static ul(...$arguments)
- * @method static table(...$arguments)
- * @method static tbody(...$arguments)
- * @method static td(...$arguments)
- * @method static tr(...$arguments)
  *
  * @mixin Html
  */
@@ -423,6 +410,7 @@ class Html extends Markup
 
         $icon_array = explode(',', $icon, 2);
         $icon = Arr::get($icon_array, 0);
+
         if (Arr::has($icon_array, 1)) {
             $attributes = explode(',', Arr::get($icon_array, 1, ''));
         }
@@ -433,8 +421,10 @@ class Html extends Markup
         } else {
             $type = config('html.icon.default.type', 'l');
         }
+
         $icon = ($icon[0] === '-') ? substr($icon, 1) : 'fa-'.$icon;
         $size = ($size > 0) ? ' fa-'.$size : '';
+
         $fa = self::$tag()->addClass('fa'.$type.' fa-fw '.$icon.$size)->aria('hidden', 'true');
 
         if (isset($attributes) && is_array($attributes)) {
@@ -1073,66 +1063,99 @@ class Html extends Markup
 
     public static function a(...$arguments)
     {
+        array_unshift($arguments, 'a');
+
         return self::createElement(...$arguments);
     }
 
     public static function button(...$arguments)
     {
+        array_unshift($arguments, 'button');
+
         return self::createElement(...$arguments);
     }
 
     public static function div(...$arguments)
     {
+        array_unshift($arguments, 'div');
+
         return self::createElement(...$arguments);
     }
 
     public static function input(...$arguments)
     {
+        array_unshift($arguments, 'input');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function textarea(...$arguments)
+    {
+        array_unshift($arguments, 'textarea');
+
         return self::createElement(...$arguments);
     }
 
     public static function li(...$arguments)
     {
+        array_unshift($arguments, 'li');
+
         return self::createElement(...$arguments);
     }
 
     public static function p(...$arguments)
     {
+        array_unshift($arguments, 'p');
+
         return self::createElement(...$arguments);
     }
 
     public static function img(...$arguments)
     {
+        array_unshift($arguments, 'img');
+
         return self::createElement(...$arguments);
     }
 
     public static function span(...$arguments)
     {
+        array_unshift($arguments, 'span');
+
         return self::createElement(...$arguments);
     }
 
     public static function ul(...$arguments)
     {
+        array_unshift($arguments, 'ul');
+
         return self::createElement(...$arguments);
     }
 
     public static function table(...$arguments)
     {
+        array_unshift($arguments, 'table');
+
         return self::createElement(...$arguments);
     }
 
     public static function tbody(...$arguments)
     {
+        array_unshift($arguments, 'tbody');
+
         return self::createElement(...$arguments);
     }
 
     public static function td(...$arguments)
     {
+        array_unshift($arguments, 'td');
+
         return self::createElement(...$arguments);
     }
 
     public static function tr(...$arguments)
     {
+        array_unshift($arguments, 'tr');
+
         return self::createElement(...$arguments);
     }
 
