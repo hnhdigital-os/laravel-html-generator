@@ -6,6 +6,7 @@ use HtmlGenerator\Markup;
 use Illuminate\Support\Arr;
 
 /**
+ * @method class(...$arguments)
  * @method static a(...$arguments)
  * @method static button(...$arguments)
  * @method static div(...$arguments)
