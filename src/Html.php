@@ -14,7 +14,6 @@ use Illuminate\Support\Arr;
  * @method static p(...$arguments)
  * @method static img(...$arguments)
  * @method static span(...$arguments)
- * @method static val(...$arguments)
  * @method static ul(...$arguments)
  * @method static table(...$arguments)
  * @method static tbody(...$arguments)
@@ -1069,6 +1068,71 @@ class Html extends Markup
         array_unshift($arguments, $tag);
 
         return call_user_func_array([$this, 'addElement'], $arguments);
+    }
+
+    public static function a(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function button(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function div(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function input(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function li(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function p(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function img(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function span(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function ul(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function table(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function tbody(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function td(...$arguments)
+    {
+        return self::createElement(...$arguments);
+    }
+
+    public static function tr(...$arguments)
+    {
+        return self::createElement(...$arguments);
     }
 
     /**
