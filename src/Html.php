@@ -135,7 +135,7 @@ class Html extends Markup
     /**
      * Add a class based on a boolean value.
      */
-    public function addClassIf(bool $check, string $class_name_1 = '', string $class_name_0 = ''): Html
+    public function addClassIf(?bool $check, string $class_name_1 = '', string $class_name_0 = ''): Html
     {
         return $this->addClass($check ? $class_name_1 : $class_name_0);
     }
@@ -145,7 +145,7 @@ class Html extends Markup
      *
      * @param mixed ...$attr
      */
-    public function addAttrIf(bool $check, ...$attr): Html
+    public function addAttrIf(?bool $check, ...$attr): Html
     {
         if ($check) {
             return $this->attr(...$attr);
@@ -495,9 +495,9 @@ class Html extends Markup
     /**
      * Shortcut to set('href', $value). Only works with A tags.
      */
-    public function href(string $value = ''): Html
+    public function href(?string $value = ''): Html
     {
-        if ($this->tag === 'a') {
+        if ($this->tag === 'a' && ! is_null($value)) {
             return parent::attr('href', $value);
         }
 
@@ -757,19 +757,19 @@ class Html extends Markup
     /**
      * Add an route link.
      */
-    public function route(string $text, string $route, array $parameters = [], string $target = ''): Html
+    public function route(?string $text, string $route, array $parameters = [], string $target = ''): Html
     {
         $href = route($route, $parameters);
         $href .= !empty($target) ? '#'.$target : '';
 
-        return $this->addElement('a')->text($text)
+        return $this->addElement('a')->text($text ?? '')
             ->href($href);
     }
 
     /**
      * Add an route href.
      */
-    public function routeHref(string $route, array $parameters = [], string $target = ''): Html
+    public function routeHref(?string $route, array $parameters = [], string $target = ''): Html
     {
         $href = route($route, $parameters);
         $href .= !empty($target) ? '#'.$target : '';
@@ -882,7 +882,7 @@ class Html extends Markup
     /**
      * Add a style based on a boolean value.
      */
-    public function addStyleIf(bool $check, string $style_1 = '', string $style_0 = ''): Html
+    public function addStyleIf(?bool $check, string $style_1 = '', string $style_0 = ''): Html
     {
         return $this->style($check ? $style_1 : $style_0);
     }
@@ -945,7 +945,7 @@ class Html extends Markup
      *
      * @param mixed $args
      */
-    public function textIf(bool $test, string $value, ...$args): Html
+    public function textIf(?bool $test, string $value, ...$args): Html
     {
         return $test ? $this->text($value, ...$args) : $this;
     }
@@ -953,8 +953,12 @@ class Html extends Markup
     /**
      * Shortcut to set('title', $value).
      */
-    public function title(string $value): Html
+    public function title(?string $value): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         return parent::attr('title', $value);
     }
 
