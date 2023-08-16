@@ -27,7 +27,7 @@ class Html extends Markup
     /**
      * Auto close these tags.
      *
-     * @var array
+     * @var array $tag
      */
     protected $autocloseTagsList = [
         'img', 'br', 'hr', 'input', 'area', 'link', 'meta', 'param',
@@ -36,16 +36,14 @@ class Html extends Markup
     /**
      * Current tag.
      *
-     * @var string
+     * @var string $tag
      */
     protected $tag = 'tag';
 
     /**
      * Shortcut to set('action', $url).
-     *
-     * @param string $value
      */
-    public function addAction($url): Html
+    public function addAction(string $url): Html
     {
         return parent::attr('action', $url);
     }
@@ -53,7 +51,7 @@ class Html extends Markup
     /**
      * Add an action link.
      */
-    public function action($text, $controller_action, $parameters = []): Html
+    public function action(string $text, string $controller_action, array $parameters = []): Html
     {
         return $this->addElement('a')->text($text)
             ->href(action($controller_action, $parameters));
@@ -62,7 +60,7 @@ class Html extends Markup
     /**
      * Add an action link (static).
      */
-    public static function actionLink($text, $controller_action, $parameters = []): Html
+    public static function actionLink(string $text, string $controller_action, array $parameters = []): Html
     {
         return self::addElement('a')->text($text)
             ->href(action($controller_action, $parameters));
@@ -71,27 +69,23 @@ class Html extends Markup
     /**
      * Add an action href.
      */
-    public function actionHref($action, $parameters = []): Html
+    public function actionHref(string $action, array $parameters = []): Html
     {
         return $this->href(action($action, $parameters));
     }
 
     /**
      * Shortcut to set('alt', $value).
-     *
-     * @param string $value
      */
-    public function alt($value): Html
+    public function alt(string  $value): Html
     {
         return parent::attr('alt', e($value));
     }
 
     /**
      * Add an array of attributes.
-     *
-     * @param array $attributes
      */
-    public function addAttributes($attributes): Html
+    public function addAttributes(array $attributes): Html
     {
         foreach ($attributes as $name => $value) {
             if (!is_array($value)) {
@@ -105,10 +99,8 @@ class Html extends Markup
 
     /**
      * Add a class to classList.
-     *
-     * @param string $value
      */
-    public function addClass($value): Html
+    public function addClass(array|string $value): Html
     {
         $paramaters = func_get_args();
         if (count($paramaters) > 1) {
@@ -142,12 +134,8 @@ class Html extends Markup
 
     /**
      * Add a class based on a boolean value.
-     *
-     * @param bool   $check
-     * @param string $class_name_1
-     * @param string $class_name_0
      */
-    public function addClassIf($check, $class_name_1 = '', $class_name_0 = ''): Html
+    public function addClassIf(bool $check, string $class_name_1 = '', string $class_name_0 = ''): Html
     {
         return $this->addClass($check ? $class_name_1 : $class_name_0);
     }
@@ -155,10 +143,9 @@ class Html extends Markup
     /**
      * Add attribute if check is true.
      *
-     * @param bool $check
-     * @param ...$attr
+     * @param mixed ...$attr
      */
-    public function addAttrIf($check, ...$attr): Html
+    public function addAttrIf(bool $check, ...$attr): Html
     {
         if ($check) {
             return $this->attr(...$attr);
@@ -169,10 +156,8 @@ class Html extends Markup
 
     /**
      * Shortcut to set('for', $value).
-     *
-     * @param string $value
      */
-    public function addFor($value): Html
+    public function addFor(string $value): Html
     {
         return parent::attr('for', $value);
     }
@@ -180,8 +165,12 @@ class Html extends Markup
     /**
      * Create options.
      */
-    public function addOptionsArray($data, $data_value, $data_name, $selected_value = []): Html
-    {
+    public function addOptionsArray(
+        array $data,
+        bool|string $data_value,
+        bool|string|null $data_name,
+        array|string|null $selected_value = []
+    ): Html {
         if (!is_array($selected_value) && (strlen($selected_value) || !empty($selected_value))) {
             $selected_value = [$selected_value];
         }
@@ -226,21 +215,16 @@ class Html extends Markup
 
     /**
      * Shortcut to set('aria-$name', $value).
-     *
-     * @param string $name
-     * @param string $value
      */
-    public function aria($name, $value): Html
+    public function aria(string $name, string $value): Html
     {
         return parent::attr('aria-'.$name, $value);
     }
 
     /**
      * Shortcut to set('autocomplete', $value). Only works with FORM, INPUT tags.
-     *
-     * @param string $value
      */
-    public function autocomplete($value = 'off'): Html
+    public function autocomplete(string $value = 'off'): Html
     {
         if (in_array($this->tag, ['form', 'input', 'textarea', 'select'])) {
             return parent::attr('autocomplete', $value);
@@ -251,10 +235,8 @@ class Html extends Markup
 
     /**
      * Shortcut to set('readonly', $value). Only works with FORM, INPUT tags.
-     *
-     * @param bool $value
      */
-    public function readonly($value = true): Html
+    public function readonly(bool $value = true): Html
     {
         if (in_array($this->tag, ['form', 'input', 'textarea', 'select'])) {
             return parent::attr('readonly', $value ? 'readonly' : '');
@@ -277,12 +259,13 @@ class Html extends Markup
 
     /**
      * Shortcut to set('checked', $value).
-     *
-     * @param bool $value
-     * @param bool $check_value
      */
-    public function checked($value = true, $check_value = true): Html
+    public function checked(?bool $value = true, ?bool $check_value = true): Html
     {
+        if (is_null($value)) {
+            return $this;
+        }
+
         if ($value === $check_value) {
             return parent::attr('checked', 'checked');
         }
@@ -324,22 +307,16 @@ class Html extends Markup
 
     /**
      * Shortcut to set('data-$name', $value).
-     *
-     * @param string $name
-     * @param string $value
      */
-    public function data($name, $value): Html
+    public function data(string $name, mixed $value): Html
     {
         return parent::attr('data-'.$name, $value);
     }
 
     /**
      * Shortcut to set('disabled', $value).
-     *
-     * @param bool $value
-     * @param bool $check_value
      */
-    public function disable($value = true, $check_value = true): Html
+    public function disable(bool $value = true, bool $check_value = true): Html
     {
         if ($value === $check_value) {
             return parent::attr('disabled', 'disabled')
@@ -351,10 +328,8 @@ class Html extends Markup
 
     /**
      * Shortcut to set('form', $value).
-     *
-     * @param string $value
      */
-    public function form($value): Html
+    public function form(string $value): Html
     {
         return parent::attr('form', $value);
     }
@@ -362,7 +337,7 @@ class Html extends Markup
     /**
      * Create a form object.
      */
-    public static function addForm($settings = []): Html
+    public static function addForm(array $settings = []): Html
     {
         $form = self::createElement('form');
 
@@ -381,7 +356,7 @@ class Html extends Markup
      *
      * @return int|string
      */
-    public static function getFileUploadMaxSize($convert_to_bytes = true)
+    public static function getFileUploadMaxSize(string|int|null $convert_to_bytes = null): string
     {
         $max_size = -1;
         $max_size_string = '0B';
@@ -405,16 +380,14 @@ class Html extends Markup
 
     /**
      * Converts a text based size into bytes.
-     *
-     * @param string|int $size
      */
-    private static function parseSize($size): float
+    private static function parseSize(string|int $size): float
     {
         // Remove the non-unit characters from the size.
-        $unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
+        $unit = preg_replace('/[^bkmgtpezy]/i', '', (string) $size);
 
         // Remove the non-numeric characters from the size.
-        $size = preg_replace('/[^0-9\.]/', '', $size);
+        $size = preg_replace('/[^0-9\.]/', '', (string) $size);
 
         // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
         if ($unit) {
@@ -427,19 +400,15 @@ class Html extends Markup
     /**
      * Shortcut to set('download', $value).
      */
-    public function download($value): Html
+    public function download(string $value): Html
     {
         return parent::attr('download', $value);
     }
 
     /**
      * Shortcut to creating a FontAwesome item (static).
-     *
-     * @param string     $value
-     * @param string|int $size
-     * @param string     $ta
      */
-    public static function icon($icon, $size = 0, $tag = 'i'): Html
+    public static function icon(string $icon, string|int $size = 0, string $tag = 'i'): Html
     {
         $icon = preg_replace('/(")(.*?)(")/', '$2', $icon);
 
@@ -478,11 +447,8 @@ class Html extends Markup
 
     /**
      * Shortcut to creating a FontAwesome item.
-     *
-     * @param string $icon
-     * @param string $tag
      */
-    public function addicon($icon, $tag = 'i'): Html
+    public function addicon(string $icon, string $tag = 'i'): Html
     {
         $icon = static::icon($icon, $tag);
 
@@ -499,21 +465,16 @@ class Html extends Markup
 
     /**
      * Shortcut to createElement('h'.$size, $text).
-     *
-     * @param int|string $size
-     * @param string     $text
      */
-    public static function h($size, $text): Html
+    public static function h(string|int $size, string $text): Html
     {
         return self::createElement('h'.$size, $text);
     }
 
     /**
      * Shortcut to set('height', $value).
-     *
-     * @param string|int $value
      */
-    public function height($value): Html
+    public function height(string|int  $value): Html
     {
         return parent::attr('height', $value);
     }
@@ -533,10 +494,8 @@ class Html extends Markup
 
     /**
      * Shortcut to set('href', $value). Only works with A tags.
-     *
-     * @param string $value
      */
-    public function href($value = ''): Html
+    public function href(string $value = ''): Html
     {
         if ($this->tag === 'a') {
             return parent::attr('href', $value);
@@ -547,20 +506,16 @@ class Html extends Markup
 
     /**
      * Shortcut to set('id', $value).
-     *
-     * @param string|int $value
      */
-    public function id($value): Html
+    public function id(string|int $value): Html
     {
         return $this->set('id', $value);
     }
 
     /**
      * Shortcut to set('href', 'javascript:void(0)').
-     *
-     * @param string|int $value
      */
-    public function scriptLink($value = 0): Html
+    public function scriptLink(string|int $value = 0): Html
     {
         $value = ($value !== 0) ? '\''.urlencode(htmlspecialchars($value)).'\'' : $value;
 
@@ -569,10 +524,8 @@ class Html extends Markup
 
     /**
      * Shortcut for creating a label.
-     *
-     * @param string $value
      */
-    public function label($text): Html
+    public function label(string $text): Html
     {
         $label = self::createElement('label');
 
@@ -586,10 +539,8 @@ class Html extends Markup
 
     /**
      * Shortcut to set('lang', $value).
-     *
-     * @param string $value
      */
-    public function lang($value): Html
+    public function lang(string $value): Html
     {
         return $this->set('lang', $value);
     }
@@ -597,16 +548,16 @@ class Html extends Markup
     /**
      * Add an route link (static).
      */
-    public static function urlLink($text, $url, $parameters = [], $secure = null): Html
+    public static function urlLink(string $text, string $url, array $parameters = [], bool $secure = null): Html
     {
-        return $this->createElement('a')->text($text)
+        return self::createElement('a')->text($text)
             ->href(url($url, $parameters, $secure));
     }
 
     /**
      * Add an route link.
      */
-    public function url($text, $url, $parameters = [], $secure = null): Html
+    public function url(string $text, string $url, array $parameters = [], bool $secure = null): Html
     {
         return $this->addElement('a')->text($text)
             ->href(url($url, $parameters, $secure));
@@ -614,13 +565,11 @@ class Html extends Markup
 
     /**
      * Shortcut to set('min', $value).
-     *
-     * @param string|int $value
      */
-    public function min($value): Html
+    public function min(string|int|float$value): Html
     {
         if ($this->tag === 'input') {
-            return parent::attr('min', $value);
+            return parent::attr('min', (string) floatval($value));
         }
 
         return $this;
@@ -628,13 +577,11 @@ class Html extends Markup
 
     /**
      * Shortcut to set('max', $value).
-     *
-     * @param string|int $value
      */
-    public function max($value): Html
+    public function max(string|int|float $value): Html
     {
         if ($this->tag === 'input') {
-            return parent::attr('max', $value);
+            return parent::attr('max', (string) floatval($value));
         }
 
         return $this;
@@ -642,13 +589,11 @@ class Html extends Markup
 
     /**
      * Shortcut to set('maxlength', $value).
-     *
-     * @param string|int $value
      */
-    public function maxlength($value): Html
+    public function maxlength(string|int $value): Html
     {
         if ($this->tag === 'input') {
-            return parent::attr('maxlength', $value);
+            return parent::attr('maxlength', (string) intval($value));
         }
 
         return $this;
@@ -656,12 +601,10 @@ class Html extends Markup
 
     /**
      * Shortcut to set('name', $value).
-     *
-     * @param string $value
      */
-    public function name($value): Html
+    public function name(?string $value = null): Html
     {
-        if ($value === false) {
+        if (is_null($value)) {
             return $this;
         }
 
@@ -670,10 +613,8 @@ class Html extends Markup
 
     /**
      * Shortcut to set('target', '_blank').
-     *
-     * @param string $value
      */
-    public function openNew($open_normally = false): Html
+    public function openNew(bool $open_normally = false): Html
     {
         if (!$open_normally && $this->tag === 'a') {
             return parent::attr('target', '_blank');
@@ -684,11 +625,8 @@ class Html extends Markup
 
     /**
      * Shortcut to set('on...', $value).
-     *
-     * @param string $name
-     * @param string $value
      */
-    public function on($name, $value): Html
+    public function on(string $name, string $value): Html
     {
         parent::attr('on'.$name, $value);
 
@@ -697,14 +635,15 @@ class Html extends Markup
 
     /**
      * Shortcut to set('style', 'opacity: xx').
-     *
-     * @param string $value
      */
-    public function opacity($value): Html
+    public function opacity(string|float $value): Html
     {
-        if (!isset($this->attributeList['style'])) {
+        if (! isset($this->attributeList['style'])) {
             $this->attributeList['style'] = '';
         }
+
+        $value = floatval($value);
+
         $this->attributeList['style'] .= 'opacity: '.round($value / 100, 2).';';
 
         return $this;
@@ -712,20 +651,16 @@ class Html extends Markup
 
     /**
      * Shortcut to set('pattern', $value).
-     *
-     * @param string $value
      */
-    public function pattern($value): Html
+    public function pattern(string $value): Html
     {
         return parent::attr('pattern', $value);
     }
 
     /**
      * Shortcut to set('placeholder', $value).
-     *
-     * @param string $value
      */
-    public function placeholder($value): Html
+    public function placeholder(string $value): Html
     {
         return parent::attr('placeholder', $value);
     }
@@ -739,8 +674,12 @@ class Html extends Markup
      *
      * @return array
      */
-    public static function prepareOptions($options, $blank_first_option = false, $name_first_option = '', $value_first_option = ''): array
-    {
+    public static function prepareOptions(
+        array $options,
+        bool $blank_first_option = false,
+        string $name_first_option = '',
+        string $value_first_option = ''
+    ): array {
         $options = array_map(function ($key, $value) {
             return [$key, $value];
         }, array_keys($options), array_values($options));
@@ -754,18 +693,14 @@ class Html extends Markup
 
     /**
      * Shortcut to set('method', $value).
-     *
-     * @param string $value
      */
-    public function method($value = 'POST'): Html
+    public function method(string $value = 'POST'): Html
     {
         return parent::attr('method', $value);
     }
 
     /**
      * Shortcut to set('multiple', 'multiple').
-     *
-     * @param string $value
      */
     public function multiple(): Html
     {
@@ -774,10 +709,8 @@ class Html extends Markup
 
     /**
      * Remove a class from classList.
-     *
-     * @param string $value
      */
-    public function removeClass($value): Html
+    public function removeClass(string $value): Html
     {
         if (!is_null($this->attributeList['class'])) {
             unset($this->attributeList['class'][array_search($value, $this->attributeList['class'])]);
@@ -788,11 +721,8 @@ class Html extends Markup
 
     /**
      * Shortcut to set('required', $value).
-     *
-     * @param bool $required
-     * @param bool $required_value
      */
-    public function required($required = true, $required_value = true): Html
+    public function required(bool $required = true, bool $required_value = true): Html
     {
         if ($required == $required_value) {
             $this->addClass('required');
@@ -806,23 +736,19 @@ class Html extends Markup
 
     /**
      * Shortcut to set('role', $value).
-     *
-     * @param string $value
      */
-    public function role($value): Html
+    public function role(string $value): Html
     {
         return parent::attr('role', $value);
     }
 
     /**
      * Shortcut to set('rows', $value).
-     *
-     * @param int $rows
      */
-    public function rows($rows): Html
+    public function rows(int|string $rows): Html
     {
         if ($this->tag === 'textarea') {
-            return parent::attr('rows', $rows);
+            return parent::attr('rows', (string) $rows);
         }
 
         return $this;
@@ -830,13 +756,8 @@ class Html extends Markup
 
     /**
      * Add an route link.
-     *
-     * @param string $text
-     * @param string $route
-     * @param array  $parameters
-     * @param string $target
      */
-    public function route($text, $route, $parameters = [], $target = ''): Html
+    public function route(string $text, string $route, array $parameters = [], string $target = ''): Html
     {
         $href = route($route, $parameters);
         $href .= !empty($target) ? '#'.$target : '';
@@ -847,12 +768,8 @@ class Html extends Markup
 
     /**
      * Add an route href.
-     *
-     * @param string $route
-     * @param array  $parameters
-     * @param string $target
      */
-    public function routeHref($route, $parameters = [], $target = ''): Html
+    public function routeHref(string $route, array $parameters = [], string $target = ''): Html
     {
         $href = route($route, $parameters);
         $href .= !empty($target) ? '#'.$target : '';
@@ -861,11 +778,9 @@ class Html extends Markup
     }
 
     /**
-     * Shortcut to set('selected', 'selected').
-     *
-     * @param string|bool $value
+     * Shortcut to set('dir', 'rtl').
      */
-    public function rtl($is_rtl = false): Html
+    public function rtl(bool $is_rtl = false): Html
     {
         if ($is_rtl) {
             parent::attr('dir', 'rtl');
@@ -878,8 +793,6 @@ class Html extends Markup
 
     /**
      * Shortcut to set('selected', 'selected').
-     *
-     * @param string $value
      */
     public function selected(): Html
     {
@@ -888,15 +801,14 @@ class Html extends Markup
 
     /**
      * Add an route link (static).
-     *
-     * @param string $text
-     * @param string $route
-     * @param array  $parameters
-     * @param array  $link_attributes
-     * @param string $extra_link
      */
-    public static function routeLink($text, $route, $parameters = [], $link_attributes = [], $extra_link = ''): Html
-    {
+    public static function routeLink(
+        string $text,
+        string $route,
+        array $parameters = [],
+        array $link_attributes = [],
+        string $extra_link = ''
+    ): Html {
         $element = self::createElement('a')->text($text)
             ->href(route($route, $parameters).$extra_link);
 
@@ -915,10 +827,8 @@ class Html extends Markup
 
     /**
      * Return string of this object.
-     *
-     * @param bool|string $return_string
      */
-    public function s($return_string = true): string
+    public function s(string|bool|null $return_string = true): string
     {
         return ($return_string) ? (string) $this : '';
     }
@@ -941,21 +851,16 @@ class Html extends Markup
 
     /**
      * Alias for setting an attribute.
-     *
-     * @param string $name
-     * @param string $value
      */
-    public function setAttribute($name, $value): Html
+    public function setAttribute(string $name, string $value): Html
     {
         return $this->set($name, $value);
     }
 
     /**
      * Set the tag name.
-     *
-     * @param string $value
      */
-    public function setTag($value): Html
+    public function setTag(string $value): Html
     {
         $this->tag = $value;
 
@@ -964,10 +869,8 @@ class Html extends Markup
 
     /**
      * Shortcut to set('src', $value).
-     *
-     * @param string $value
      */
-    public function src($value): Html
+    public function src(string $value): Html
     {
         if ($this->tag === 'img') {
             return parent::attr('src', $value);
@@ -978,23 +881,16 @@ class Html extends Markup
 
     /**
      * Add a style based on a boolean value.
-     *
-     * @param bool   $check
-     * @param string $style_1
-     * @param string $style_0
      */
-    public function addStyleIf($check, $style_1 = '', $style_0 = ''): Html
+    public function addStyleIf(bool $check, string $style_1 = '', string $style_0 = ''): Html
     {
         return $this->style($check ? $style_1 : $style_0);
     }
 
     /**
      * Shortcut to set('style', $value).
-     *
-     * @param string $value
-     * @param bool   $replace
      */
-    public function style($value, $replace = false): Html
+    public function style(string $value, bool $replace = false): Html
     {
         if ($replace) {
             return parent::attr('style', $value);
@@ -1009,20 +905,16 @@ class Html extends Markup
 
     /**
      * Shortcut to set('tabindex', $value).
-     *
-     * @param string $value
      */
-    public function tabindex($value): Html
+    public function tabindex(int|string $value): Html
     {
-        return parent::attr('tabindex', $value);
+        return parent::attr('tabindex', (string) $value);
     }
 
     /**
      * Shortcut to set('target', $value).
-     *
-     * @param string $value
      */
-    public function target($value): Html
+    public function target(string $value): Html
     {
         return parent::attr('target', $value);
     }
@@ -1031,7 +923,7 @@ class Html extends Markup
      * Define text content.
      *
      * @param string $value
-     * @param array  $args
+     * @param mixed   $args
      */
     public function text($value, ...$args): Html
     {
@@ -1051,31 +943,25 @@ class Html extends Markup
     /**
      * Define text content if test is true.
      *
-     * @param bool   $test
-     * @param string $value
-     * @param array  $args
+     * @param mixed $args
      */
-    public function textIf($test, $value, ...$args): Html
+    public function textIf(bool $test, string $value, ...$args): Html
     {
         return $test ? $this->text($value, ...$args) : $this;
     }
 
     /**
      * Shortcut to set('title', $value).
-     *
-     * @param string $value
      */
-    public function title($value): Html
+    public function title(string $value): Html
     {
         return parent::attr('title', $value);
     }
 
     /**
      * Title toggle.
-     *
-     * @param bool $is_true
      */
-    public function titleWhen($is_true): Html
+    public function titleWhen(bool $is_true): Html
     {
         return parent::attr(
             'title',
@@ -1088,7 +974,7 @@ class Html extends Markup
      *
      * @param string $value
      */
-    public function type($value): Html
+    public function type(string $value): Html
     {
         switch ($value) {
             case 'checkbox':
@@ -1101,30 +987,24 @@ class Html extends Markup
 
     /**
      * Shortcut to set('width', $value).
-     *
-     * @param string|int $value
      */
-    public function width($value): Html
+    public function width(string|int $value): Html
     {
         return parent::attr('width', $value);
     }
 
     /**
      * Shortcut to set('value', $value).
-     *
-     * @param string|int $value
      */
-    public function value($value = ''): Html
+    public function value(mixed $value = ''): Html
     {
         return parent::attr('value', $value);
     }
 
     /**
      * Shortcut to set('value', $value).
-     *
-     * @param string|int|null $value
      */
-    public function val($value = ''): Html
+    public function val(mixed $value = ''): Html
     {
         return parent::attr('value', $value);
     }
@@ -1132,12 +1012,8 @@ class Html extends Markup
     /**
      * Shortcut to set('value', $value)
      * and set('data-datepicker-format', $setting_format).
-     *
-     * @param string $value
-     * @param string $value_format
-     * @param string $setting_format
      */
-    public function valueDate($value = '', $value_format = '', $setting_format = ''): Html
+    public function valueDate(string $value = '', string $value_format = '', string$setting_format = ''): Html
     {
         if (is_object($value)) {
             $value = $value->format($value_format);
@@ -1154,10 +1030,8 @@ class Html extends Markup
 
     /**
      * Apply any defaults from configuration.
-     *
-     * @param string $tag
      */
-    public function configDefaults($tag): void
+    public function configDefaults(string $tag): void
     {
         if (count(config('html.default.'.$tag, []))) {
             foreach (config('html.default.'.$tag) as $name => $value) {
