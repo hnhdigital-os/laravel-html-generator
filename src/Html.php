@@ -14,11 +14,12 @@ use Illuminate\Support\Arr;
  * @method static p(...$arguments)
  * @method static img(...$arguments)
  * @method static span(...$arguments)
- * @method static td(...$arguments)
- * @method static tr(...$arguments)
  * @method static val(...$arguments)
  * @method static ul(...$arguments)
  * @method static table(...$arguments)
+ * @method static tbody(...$arguments)
+ * @method static td(...$arguments)
+ * @method static tr(...$arguments)
  *
  * @mixin Html
  */
@@ -138,6 +139,14 @@ class Html extends Markup
     public function addClassIf(?bool $check, string $class_name_1 = '', string $class_name_0 = ''): Html
     {
         return $this->addClass($check ? $class_name_1 : $class_name_0);
+    }
+
+    /**
+     * Alias for addClassIf
+     */
+    public function classIf(?bool $check, string $class_name_1 = '', string $class_name_0 = ''): Html
+    {
+        return $this->addClassIf($check, $class_name_1, $class_name_0);
     }
 
     /**
@@ -1052,6 +1061,11 @@ class Html extends Markup
      */
     public function __call($tag, $arguments): Html
     {
+        // Capture a call to ->class()
+        if ($tag === 'class') {
+            return $this->addClass(...$arguments);
+        }
+
         array_unshift($arguments, $tag);
 
         return call_user_func_array([$this, 'addElement'], $arguments);
