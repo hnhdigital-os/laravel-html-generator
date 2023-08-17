@@ -1037,7 +1037,7 @@ class Html extends Markup
      * (Re)Define an attribute.
      *
      * @param string|array<mixed>|null $name
-     * @param ?string $value
+     * @param ?string                  $value
      */
     public function set($name, $value = null): Html
     {

@@ -17,7 +17,7 @@ if (!defined('ENT_XHTML')) {
 class Markup implements ArrayAccess
 {
     /**
-     * Specifies if attribute values and text input sould be protected from XSS injection
+     * Specifies if attribute values and text input sould be protected from XSS injection.
      */
     public static bool $avoidXSS = false;
 
@@ -45,9 +45,9 @@ class Markup implements ArrayAccess
      * @var array<int, string>
      */
     protected array $autocloseTagsList = [
-        'img', 'br', 'hr', 'input', 'area', 'link', 'meta', 'param', 'base', 'col', 'command', 'keygen', 'source'
+        'img', 'br', 'hr', 'input', 'area', 'link', 'meta', 'param', 'base', 'col', 'command', 'keygen', 'source',
     ];
-    
+
     /**
      * @var array<mixed>
      */
@@ -56,7 +56,7 @@ class Markup implements ArrayAccess
     protected function __construct(string $tag, ?self $top = null)
     {
         $this->tag = $tag;
-        $this->top =& $top;
+        $this->top = &$top;
         $this->attributeList = [];
         $this->content = [];
         $this->autoclosed = in_array($this->tag, $this->autocloseTagsList);
@@ -64,7 +64,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Alias for getParent()
+     * Alias for getParent().
      */
     public function __invoke(): self
     {
@@ -72,7 +72,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Create a new Markup
+     * Create a new Markup.
      */
     public static function createElement(string $tag = ''): self
     {
@@ -83,8 +83,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     *
-     * Add element at an existing Markup
+     * Add element at an existing Markup.
      */
     public function addElement(self|string $tag = ''): self
     {
@@ -105,6 +104,7 @@ class Markup implements ArrayAccess
 
     /**
      * (Re)Define an attribute or many attributes.
+     *
      * @param string|array<mixed> $attribute
      */
     public function set(string|array $attribute, ?string $value = null): self
@@ -121,16 +121,17 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * alias to method "set"
+     * alias to method "set".
+     *
      * @param string|array<mixed> $attribute
      */
     public function attr($attribute, ?string $value = null): self
     {
-        return call_user_func_array(array($this, 'set'), func_get_args());
+        return call_user_func_array([$this, 'set'], func_get_args());
     }
 
     /**
-     * Checks if an attribute is set for this tag and not null
+     * Checks if an attribute is set for this tag and not null.
      */
     public function offsetExists(mixed $offset): bool
     {
@@ -138,7 +139,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Returns the value the attribute set for this tag
+     * Returns the value the attribute set for this tag.
      */
     public function offsetGet(mixed $offset): mixed
     {
@@ -146,7 +147,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Sets the value an attribute for this tag
+     * Sets the value an attribute for this tag.
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -154,7 +155,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Removes an attribute
+     * Removes an attribute.
      */
     public function offsetUnset(mixed $offset): void
     {
@@ -174,7 +175,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Returns the top element
+     * Returns the top element.
      */
     public function getTop(): self
     {
@@ -182,8 +183,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     *
-     * Return parent of current element
+     * Return parent of current element.
      */
     public function getParent(): ?self
     {
@@ -191,7 +191,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Return first child of parent of current object
+     * Return first child of parent of current object.
      */
     public function getFirst(): ?self
     {
@@ -205,7 +205,7 @@ class Markup implements ArrayAccess
     {
         $prev = $this;
 
-        if (! is_null($this->parent)) {
+        if (!is_null($this->parent)) {
             foreach ($this->parent->content as $c) {
                 if ($c === $this) {
                     break;
@@ -234,6 +234,7 @@ class Markup implements ArrayAccess
                 }
             }
         }
+
         return $next;
     }
 
@@ -250,6 +251,7 @@ class Markup implements ArrayAccess
             foreach ($parent->content as $key => $value) {
                 if ($parent->content[$key] == $this) {
                     unset($parent->content[$key]);
+
                     return $parent;
                 }
             }
@@ -259,7 +261,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Generation method
+     * Generation method.
      */
     public function __toString(): string
     {
@@ -267,19 +269,19 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Generation method
+     * Generation method.
      */
     public function toString(): string
     {
         $string = '';
 
         if (!empty($this->tag)) {
-            $string .=  '<' . $this->tag;
+            $string .= '<'.$this->tag;
             $string .= $this->attributesToString();
             if ($this->autoclosed) {
                 $string .= '/>';
             } else {
-                $string .= '>' . $this->contentToString() . '</' . $this->tag . '>';
+                $string .= '>'.$this->contentToString().'</'.$this->tag.'>';
             }
         } else {
             $string .= $this->text;
@@ -290,38 +292,39 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Return current list of attribute as a string $key="$val" $key2="$val2"
+     * Return current list of attribute as a string $key="$val" $key2="$val2".
      */
     protected function attributesToString(): string
     {
         $string = '';
-        $XMLConvention = in_array(static::$outputLanguage, array(ENT_XML1, ENT_XHTML));
+        $XMLConvention = in_array(static::$outputLanguage, [ENT_XML1, ENT_XHTML]);
         if (!empty($this->attributeList)) {
             foreach ($this->attributeList as $key => $value) {
-                if ($value!==null && ($value!==false || $XMLConvention)) {
-                    $string.= ' ' . $key;
-                    if ($value===true) {
+                if ($value !== null && ($value !== false || $XMLConvention)) {
+                    $string .= ' '.$key;
+                    if ($value === true) {
                         if ($XMLConvention) {
                             $value = $key;
                         } else {
                             continue;
                         }
                     }
-                    $string.= '="' . implode(
+                    $string .= '="'.implode(
                         ' ',
                         array_map(
                             static::$avoidXSS ? 'static::unXSS' : 'strval',
-                            is_array($value) ? $value : array($value)
+                            is_array($value) ? $value : [$value]
                         )
-                    ) . '"';
+                    ).'"';
                 }
             }
         }
+
         return $string;
     }
 
     /**
-     * return current list of content as a string
+     * return current list of content as a string.
      */
     protected function contentToString(): string
     {
@@ -337,7 +340,7 @@ class Markup implements ArrayAccess
     }
 
     /**
-     * Protects value from XSS injection by replacing some characters by XML / HTML entities
+     * Protects value from XSS injection by replacing some characters by XML / HTML entities.
      */
     public static function unXSS(string $input): string
     {
