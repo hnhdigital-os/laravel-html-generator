@@ -16,7 +16,7 @@ class Html extends Markup
     /**
      * Auto close these tags.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $autocloseTagsList = [
         'img', 'br', 'hr', 'input', 'area', 'link', 'meta', 'param',
@@ -32,7 +32,7 @@ class Html extends Markup
     /**
      * Shortcut to set('action', $url).
      */
-    public function addAction(?string $ur = nulll): Html
+    public function addAction(?string $url = null): Html
     {
         if (blank($url)) {
             return $this;
@@ -43,6 +43,8 @@ class Html extends Markup
 
     /**
      * Add an action link.
+     *
+     * @param array<mixed> $parameters
      */
     public function action(?string $text = null, ?string $controller_action = null, array $parameters = []): Html
     {
@@ -56,21 +58,25 @@ class Html extends Markup
 
     /**
      * Add an action link (static).
+     *
+     * @param array<mixed> $parameters
      */
     public static function actionLink(?string $text = null, ?string $controller_action = null, array $parameters = []): Html
     {
         $text = $text ?? '';
 
         if (blank($controller_action)) {
-            return self::addElement('a')->text($text);
+            return self::createElement('a')->text($text);
         }
 
-        return self::addElement('a')->text($text)
+        return self::createElement('a')->text($text)
             ->href(action($controller_action, $parameters));
     }
 
     /**
      * Add an action href.
+     *
+     * @param array<mixed> $parameters
      */
     public function actionHref(?string $action = null, array $parameters = []): Html
     {
@@ -95,11 +101,13 @@ class Html extends Markup
 
     /**
      * Add an array of attributes.
+     *
+     * @param array<string, mixed> $attributes
      */
     public function addAttributes(array $attributes = []): Html
     {
         foreach ($attributes as $name => $value) {
-            if (!is_array($value)) {
+            if (! is_array($value)) {
                 $value = [$value];
             }
 
@@ -111,6 +119,8 @@ class Html extends Markup
 
     /**
      * Add an array of attributes.
+     *
+     * @param array<mixed> $attributes
      */
     public function attributes(array $attributes = []): Html
     {
@@ -119,6 +129,8 @@ class Html extends Markup
 
     /**
      * Add a class to classList.
+     *
+     * @param array<int, string>|string|null $value
      */
     public function addClass(array|string|null $value = ''): Html
     {
@@ -132,11 +144,11 @@ class Html extends Markup
             $value = $paramaters;
         }
 
-        if (!is_array($value)) {
+        if (! is_array($value)) {
             $value = explode(' ', $value);
         }
 
-        if (!isset($this->attributeList['class']) || is_null($this->attributeList['class'])) {
+        if (! isset($this->attributeList['class'])) {
             $this->attributeList['class'] = [];
         }
 
@@ -163,6 +175,9 @@ class Html extends Markup
 
     /**
      * Add a class based on a boolean value.
+     *
+     * @param array<int, string>|string|null $class_name_1
+     * @param array<int, string>|string|null $class_name_0
      */
     public function addClassIf(
         ?bool $check = false,
@@ -174,6 +189,9 @@ class Html extends Markup
 
     /**
      * Alias for addClassIf.
+     *
+     * @param array<int, string>|string|null $class_name_1
+     * @param array<int, string>|string|null $class_name_0
      */
     public function classIf(
         ?bool $check = false,
@@ -188,7 +206,7 @@ class Html extends Markup
      *
      * @param mixed ...$attr
      */
-    public function addAttrIf(?bool $check = false, ...$attr): Html
+    public function addAttrIf(?bool $check = false, mixed ...$attr): Html
     {
         if ($check) {
             return $this->attr(...$attr);
@@ -197,7 +215,7 @@ class Html extends Markup
         return $this;
     }
 
-    public function attrIf(?bool $check = false, ...$attr): Html
+    public function attrIf(?bool $check = false, mixed ...$attr): Html
     {
         return $this->addAttrIf($check, ...$attr);
     }
@@ -212,6 +230,9 @@ class Html extends Markup
 
     /**
      * Create options.
+     *
+     * @param array<mixed> $data
+     * @param array<mixed>|string|null $selected_value
      */
     public function addOptionsArray(
         array $data,
@@ -257,7 +278,7 @@ class Html extends Markup
                 $option->attr($key, $value);
             }
             if (filled($selected_value) && in_array($option_value, $selected_value)) {
-                $option->selected('selected');
+                $option->attr('selected', 'selected');
             }
         }
 
@@ -404,6 +425,8 @@ class Html extends Markup
 
     /**
      * Create a form object.
+     *
+     * @param array<string, mixed> $settings
      */
     public static function addForm(array $settings = []): Html
     {
@@ -422,32 +445,23 @@ class Html extends Markup
     /**
      * Returns a file size limit in bytes based on the PHP upload_max_filesize
      * and post_max_size.
-     *
-     * @param string|int|bool $convert_to_bytes
-     *
-     * @return int|string
      */
-    public static function getFileUploadMaxSize(string|int|null $convert_to_bytes = null): string
+    public static function getFileUploadMaxSize(string|int|null $convert_to_bytes = null): int
     {
-        $max_size = -1;
-        $max_size_string = '0B';
+        // Start with post_max_size.
+        $max_size_string = ini_get('post_max_size');
+        $max_size = self::parseSize($max_size_string);
 
-        if ($max_size < 0) {
-            // Start with post_max_size.
-            $max_size_string = ini_get('post_max_size');
-            $max_size = self::parseSize($max_size_string);
+        // If upload_max_size is less, then reduce. Except if upload_max_size is
+        // zero, which indicates no limit.
+        $upload_max = self::parseSize(ini_get('upload_max_filesize'));
 
-            // If upload_max_size is less, then reduce. Except if upload_max_size is
-            // zero, which indicates no limit.
-            $upload_max = self::parseSize(ini_get('upload_max_filesize'));
-
-            if ($upload_max > 0 && $upload_max < $max_size) {
-                $max_size = $upload_max;
-                $max_size_string = ini_get('upload_max_filesize');
-            }
+        if ($upload_max > 0 && $upload_max < $max_size) {
+            $max_size = $upload_max;
+            $max_size_string = ini_get('upload_max_filesize');
         }
 
-        return $convert_to_bytes ? $max_size : $max_size_string;
+        return (int) ($convert_to_bytes ? $max_size : $max_size_string);
     }
 
     /**
@@ -463,10 +477,10 @@ class Html extends Markup
 
         // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
         if ($unit) {
-            return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+            return round(floatval($size) * pow(1024, stripos('bkmgtpezy', $unit[0])));
         }
 
-        return round($size);
+        return round(floatval($size));
     }
 
     /**
@@ -491,7 +505,7 @@ class Html extends Markup
         $icon_array = explode(',', $icon, 2);
         $icon = Arr::get($icon_array, 0);
 
-        if (Arr::has($icon_array, 1)) {
+        if (Arr::has($icon_array, '1')) {
             $attributes = explode(',', Arr::get($icon_array, 1, ''));
         }
 
@@ -618,7 +632,7 @@ class Html extends Markup
         $label = self::createElement('label');
 
         if (isset($this->attributeList['id'])) {
-            $label->refer($this->attributeList['id']);
+            $label->attr('refer', $this->attributeList['id']);
         }
 
         return $label->text($this)
@@ -635,6 +649,8 @@ class Html extends Markup
 
     /**
      * Add an route link (static).
+     *
+     * @param array<mixed> $parameters
      */
     public static function urlLink(string $text, string $url, array $parameters = [], bool $secure = null): Html
     {
@@ -644,6 +660,8 @@ class Html extends Markup
 
     /**
      * Add an route link.
+     *
+     * @param array<mixed> $parameters
      */
     public function url(string $text, string $url, array $parameters = [], bool $secure = null): Html
     {
@@ -784,11 +802,11 @@ class Html extends Markup
     /**
      * Prepare key => value options array for select-options.
      *
-     * @param array  $options
+     * @param array<mixed>  $options
      * @param bool   $blank_first_option
      * @param string $value_first_option
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function prepareOptions(
         array $options,
@@ -888,6 +906,8 @@ class Html extends Markup
 
     /**
      * Add an route link.
+     *
+     * @param array<mixed> $parameters
      */
     public function route(?string $text = null, ?string $route = null, array $parameters = [], string $target = ''): Html
     {
@@ -908,6 +928,8 @@ class Html extends Markup
 
     /**
      * Add an route href.
+     *
+     * @param array<mixed> $parameters
      */
     public function routeHref(?string $route = null, array $parameters = [], string $target = ''): Html
     {
@@ -941,6 +963,9 @@ class Html extends Markup
 
     /**
      * Add an route link (static).
+     *
+     * @param array<mixed> $parameters
+     * @param array<string, mixed> $link_attributes
      */
     public static function routeLink(
         ?string $text = null,
@@ -950,11 +975,11 @@ class Html extends Markup
         string $extra_link = ''
     ): Html {
         if (is_null($text)) {
-            return $this->addElement('a');
+            return self::createElement('a');
         }
 
         if (is_null($route)) {
-            return $this->addElement('a')->text($text);
+            return self::createElement('a')->text($text);
         }
 
         $element = self::createElement('a')->text($text)
@@ -1164,7 +1189,7 @@ class Html extends Markup
      *
      * @param ?string $value
      */
-    public function type(string $value): Html
+    public function type(?string $value = null): Html
     {
         if (is_null($value)) {
             return $this;
@@ -1211,7 +1236,7 @@ class Html extends Markup
      * Shortcut to set('value', $value)
      * and set('data-datepicker-format', $setting_format).
      */
-    public function valueDate(string $value = '', string $value_format = '', string $setting_format = ''): Html
+    public function valueDate(string|object $value = '', string $value_format = '', string $setting_format = ''): Html
     {
         if (is_object($value)) {
             $value = $value->format($value_format);
@@ -1238,11 +1263,107 @@ class Html extends Markup
         }
     }
 
+    public static function a(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'a');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function button(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'button');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function div(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'div');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function input(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'input');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function textarea(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'textarea');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function li(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'li');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function p(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'p');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function img(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'img');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function span(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'span');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function ul(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'ul');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function table(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'table');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function tbody(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'tbody');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function td(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'td');
+
+        return self::createElement(...$arguments);
+    }
+
+    public static function tr(mixed ...$arguments): Html
+    {
+        array_unshift($arguments, 'tr');
+
+        return self::createElement(...$arguments);
+    }
+
     /**
-     * Add a new element.
-     *
-     * @param string $tag
-     * @param array  $arguments
+     * @param  string  $tag
+     * @param  array<mixed>  $arguments
      */
     public function __call($tag, $arguments): Html
     {
@@ -1261,109 +1382,9 @@ class Html extends Markup
         return call_user_func_array([$this, 'addElement'], $arguments);
     }
 
-    public static function a(...$arguments)
-    {
-        array_unshift($arguments, 'a');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function button(...$arguments)
-    {
-        array_unshift($arguments, 'button');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function div(...$arguments)
-    {
-        array_unshift($arguments, 'div');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function input(...$arguments)
-    {
-        array_unshift($arguments, 'input');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function textarea(...$arguments)
-    {
-        array_unshift($arguments, 'textarea');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function li(...$arguments)
-    {
-        array_unshift($arguments, 'li');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function p(...$arguments)
-    {
-        array_unshift($arguments, 'p');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function img(...$arguments)
-    {
-        array_unshift($arguments, 'img');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function span(...$arguments)
-    {
-        array_unshift($arguments, 'span');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function ul(...$arguments)
-    {
-        array_unshift($arguments, 'ul');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function table(...$arguments)
-    {
-        array_unshift($arguments, 'table');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function tbody(...$arguments)
-    {
-        array_unshift($arguments, 'tbody');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function td(...$arguments)
-    {
-        array_unshift($arguments, 'td');
-
-        return self::createElement(...$arguments);
-    }
-
-    public static function tr(...$arguments)
-    {
-        array_unshift($arguments, 'tr');
-
-        return self::createElement(...$arguments);
-    }
-
     /**
-     * Create a new element.
-     *
-     * @param string $tag
-     * @param array  $arguments
+     * @param  string  $tag
+     * @param  array<mixed>  $arguments
      */
     public static function __callStatic($tag, $arguments): Html
     {

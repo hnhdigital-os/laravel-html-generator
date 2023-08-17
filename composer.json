@@ -14,6 +14,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^7.0|^8.0",
+        "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.3"
     },
     "support": {

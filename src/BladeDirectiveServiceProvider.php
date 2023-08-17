@@ -2,19 +2,17 @@
 
 namespace HnhDigital\LaravelHtmlGenerator;
 
-use Blade;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class BladeDirectiveServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        blade::directive('icon', function ($icon) {
+        Blade::directive('icon', function ($icon) {
             $icon = trim($icon, "'\"");
 
             if (substr($icon, 0, 1) !== '$') {
@@ -24,17 +22,15 @@ class BladeDirectiveServiceProvider extends ServiceProvider
             return "<?= (string)Html::icon($icon); ?>";
         });
 
-        blade::directive('html', function ($html) {
+        Blade::directive('html', function ($html) {
             return "<?= (string)Html::$html; ?>";
         });
     }
 
     /**
      * Register any application services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }
