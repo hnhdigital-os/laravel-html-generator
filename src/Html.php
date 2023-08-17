@@ -14,20 +14,43 @@ use Illuminate\Support\Arr;
 class Html extends Markup
 {
     /**
-     * Auto close these tags.
-     *
-     * @var array<int, string>
-     */
-    protected $autocloseTagsList = [
-        'img', 'br', 'hr', 'input', 'area', 'link', 'meta', 'param',
-    ];
-
-    /**
      * Current tag.
      *
      * @var string
      */
     protected $tag = 'tag';
+
+    /**
+     * @param string       $tag
+     * @param array<mixed> $arguments
+     */
+    public function __call($tag, $arguments): Html
+    {
+        // Reserved word: `call` ->class()
+        if ($tag === 'class') {
+            return $this->addClass(...$arguments);
+        }
+
+        // Reserved word: `for` ->for()
+        if ($tag === 'for') {
+            return $this->addFor(...$arguments);
+        }
+
+        array_unshift($arguments, $tag);
+
+        return call_user_func_array([$this, 'addElement'], $arguments);
+    }
+
+    /**
+     * @param string       $tag
+     * @param array<mixed> $arguments
+     */
+    public static function __callStatic($tag, $arguments): Html
+    {
+        array_unshift($arguments, $tag);
+
+        return call_user_func_array(['self', 'createElement'], $arguments);
+    }
 
     /**
      * Shortcut to set('action', $url).
@@ -1013,7 +1036,7 @@ class Html extends Markup
     /**
      * (Re)Define an attribute.
      *
-     * @param ?string $name
+     * @param string|array<mixed>|null $name
      * @param ?string $value
      */
     public function set($name, $value = null): Html
@@ -1359,37 +1382,5 @@ class Html extends Markup
         array_unshift($arguments, 'tr');
 
         return self::createElement(...$arguments);
-    }
-
-    /**
-     * @param string       $tag
-     * @param array<mixed> $arguments
-     */
-    public function __call($tag, $arguments): Html
-    {
-        // Reserved word: `call` ->class()
-        if ($tag === 'class') {
-            return $this->addClass(...$arguments);
-        }
-
-        // Reserved word: `for` ->for()
-        if ($tag === 'for') {
-            return $this->addFor(...$arguments);
-        }
-
-        array_unshift($arguments, $tag);
-
-        return call_user_func_array([$this, 'addElement'], $arguments);
-    }
-
-    /**
-     * @param string       $tag
-     * @param array<mixed> $arguments
-     */
-    public static function __callStatic($tag, $arguments): Html
-    {
-        array_unshift($arguments, $tag);
-
-        return call_user_func_array(['self', 'createElement'], $arguments);
     }
 }
