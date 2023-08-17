@@ -107,7 +107,7 @@ class Html extends Markup
     public function addAttributes(array $attributes = []): Html
     {
         foreach ($attributes as $name => $value) {
-            if (! is_array($value)) {
+            if (!is_array($value)) {
                 $value = [$value];
             }
 
@@ -144,11 +144,11 @@ class Html extends Markup
             $value = $paramaters;
         }
 
-        if (! is_array($value)) {
+        if (!is_array($value)) {
             $value = explode(' ', $value);
         }
 
-        if (! isset($this->attributeList['class'])) {
+        if (!isset($this->attributeList['class'])) {
             $this->attributeList['class'] = [];
         }
 
@@ -231,7 +231,7 @@ class Html extends Markup
     /**
      * Create options.
      *
-     * @param array<mixed> $data
+     * @param array<mixed>             $data
      * @param array<mixed>|string|null $selected_value
      */
     public function addOptionsArray(
@@ -360,14 +360,14 @@ class Html extends Markup
 
         $attributes = $attributes1;
 
-        if (! is_array($attributes1) && strlen($attributes1) > 0) {
+        if (!is_array($attributes1) && strlen($attributes1) > 0) {
             $tag_object->text($attributes1);
             $attributes = $attributes2;
         }
 
         if (is_array($attributes)) {
             foreach ($attributes as $name => $value) {
-                if (! method_exists($tag_object, $name)) {
+                if (!method_exists($tag_object, $name)) {
                     continue;
                 }
 
@@ -595,7 +595,7 @@ class Html extends Markup
      */
     public function href(?string $value = ''): Html
     {
-        if ($this->tag === 'a' && ! is_null($value)) {
+        if ($this->tag === 'a' && !is_null($value)) {
             return parent::attr('href', $value);
         }
 
@@ -734,7 +734,7 @@ class Html extends Markup
      */
     public function openNew(bool $open_normally = false): Html
     {
-        if ($this->tag === 'a' && ! $open_normally) {
+        if ($this->tag === 'a' && !$open_normally) {
             return parent::attr('target', '_blank');
         }
 
@@ -764,7 +764,7 @@ class Html extends Markup
             return $this;
         }
 
-        if (! isset($this->attributeList['style'])) {
+        if (!isset($this->attributeList['style'])) {
             $this->attributeList['style'] = '';
         }
 
@@ -802,9 +802,9 @@ class Html extends Markup
     /**
      * Prepare key => value options array for select-options.
      *
-     * @param array<mixed>  $options
-     * @param bool   $blank_first_option
-     * @param string $value_first_option
+     * @param array<mixed> $options
+     * @param bool         $blank_first_option
+     * @param string       $value_first_option
      *
      * @return array<mixed>
      */
@@ -964,7 +964,7 @@ class Html extends Markup
     /**
      * Add an route link (static).
      *
-     * @param array<mixed> $parameters
+     * @param array<mixed>         $parameters
      * @param array<string, mixed> $link_attributes
      */
     public static function routeLink(
@@ -1130,7 +1130,7 @@ class Html extends Markup
      * Define text content.
      *
      * @param ?string $value
-     * @param mixed  $args
+     * @param mixed   $args
      */
     public function text($value, ...$args): Html
     {
@@ -1362,8 +1362,8 @@ class Html extends Markup
     }
 
     /**
-     * @param  string  $tag
-     * @param  array<mixed>  $arguments
+     * @param string       $tag
+     * @param array<mixed> $arguments
      */
     public function __call($tag, $arguments): Html
     {
@@ -1383,8 +1383,8 @@ class Html extends Markup
     }
 
     /**
-     * @param  string  $tag
-     * @param  array<mixed>  $arguments
+     * @param string       $tag
+     * @param array<mixed> $arguments
      */
     public static function __callStatic($tag, $arguments): Html
     {
