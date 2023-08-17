@@ -41,7 +41,7 @@ class Html extends Markup
     {
         array_unshift($arguments, $tag);
 
-        return call_user_func_array(['self', 'createElement'], $arguments);
+        return call_user_func_array([Html::class, 'createElement'], $arguments);
     }
 
     /**
