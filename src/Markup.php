@@ -66,7 +66,7 @@ class Markup implements ArrayAccess
     /**
      * Alias for getParent().
      */
-    public function __invoke(): self
+    public function __invoke(): static|self|null
     {
         return $this->getParent();
     }
@@ -74,18 +74,18 @@ class Markup implements ArrayAccess
     /**
      * Create a new Markup.
      */
-    public static function createElement(string $tag = ''): self
+    public static function createElement(string $tag = ''): static
     {
         /* @phpstan-ignore-next-line */
-        self::$instance = new static($tag);
+        static::$instance = new static($tag);
 
-        return self::$instance;
+        return static::$instance;
     }
 
     /**
      * Add element at an existing Markup.
      */
-    public function addElement(self|string $tag = ''): self
+    public function addElement(self|string $tag = ''): mixed
     {
         if (is_object($tag) && $tag instanceof self) {
             $htmlTag = clone $tag;
@@ -107,7 +107,7 @@ class Markup implements ArrayAccess
      *
      * @param string|array<mixed> $attribute
      */
-    public function set(string|array $attribute, ?string $value = null): self
+    public function set(string|array $attribute, ?string $value = null): static
     {
         if (is_array($attribute)) {
             foreach ($attribute as $key => $value) {
@@ -125,7 +125,7 @@ class Markup implements ArrayAccess
      *
      * @param string|array<mixed> $attribute
      */
-    public function attr($attribute, ?string $value = null): self
+    public function attr($attribute, ?string $value = null): static
     {
         return call_user_func_array([$this, 'set'], func_get_args());
     }
@@ -167,7 +167,7 @@ class Markup implements ArrayAccess
     /**
      * Define text content.
      */
-    public function text(?string $value): self
+    public function text(?string $value): static
     {
         $this->addElement('')->text = static::$avoidXSS ? static::unXSS($value) : $value;
 
@@ -177,7 +177,7 @@ class Markup implements ArrayAccess
     /**
      * Returns the top element.
      */
-    public function getTop(): self
+    public function getTop(): static|self
     {
         return $this->top === null ? $this : $this->top;
     }
