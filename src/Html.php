@@ -451,7 +451,7 @@ class Html extends Markup
             $form->addElement('input')
                 ->type('hidden')
                 ->name('MAX_FILE_SIZE')
-                ->value(self::getFileUploadMaxSize());
+                ->value(self::getFileUploadMaxSize(true));
         }
 
         return $form;
